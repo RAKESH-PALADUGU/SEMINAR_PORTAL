@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Department Research Seminar Portal</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #222;
+    }
+
+    header {
+      background-color: #1f3c88;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .seminar-type {
+      display: inline-block;
+      background-color: #e8eefc;
+      color: #1f3c88;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-top: 10px;
+      color: #1f3c88;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section h2 {
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 8px;
+      color: #1f3c88;
+    }
+
+    .info {
+      margin: 12px 0;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      margin-top: 35px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .btn {
+      text-decoration: none;
+      background-color: #1f3c88;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #16306d;
+    }
+
+    .navigation {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-btn {
+      text-decoration: none;
+      background-color: #f0f0f0;
+      padding: 12px 18px;
+      border-radius: 8px;
+      color: #222;
+      font-weight: bold;
+    }
+
+    .nav-btn:hover {
+      background-color: #ddd;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 15px;
+        padding: 20px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Department Research Seminar Portal</h1>
+    <p>Research Scholar Seminar Information</p>
+  </header>
+
+  <div class="container">
+
+    <div class="seminar-type" id="seminarType">
+      Thesis
+    </div>
+
+    <h1 id="seminarTitle">
+      Thermal Management of Li-ion Batteries
+    </h1>
+
+    <div class="section">
+      <h2>Scholar Information</h2>
+
+      <div class="info">
+        <strong>Scholar Name:</strong>
+        <span id="scholarName">Rakesh Paladugu</span>
+      </div>
+
+      <div class="info">
+        <strong>Scholar Designation:</strong>
+        <span id="scholarDesignation">Research Scholar</span>
+      </div>
+
+      <div class="info">
+        <strong>Scholar Category:</strong>
+        <span id="scholarCategory">Internal - HTRA</span>
+      </div>
+
+      <div class="info">
+        <strong>Scholar Reg. ID:</strong>
+        <span id="regId">MECH2026RS001</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Supervisor Information</h2>
+
+      <div class="info">
+        <strong>Supervisor:</strong>
+        <span id="supervisorName">Dr. ABC Kumar</span>
+      </div>
+
+      <div class="info">
+        <strong>Supervisor Designation:</strong>
+        <span id="supervisorDesignation">Professor</span>
+      </div>
+
+      <div class="info">
+        <strong>Co-Supervisor:</strong>
+        <span id="coSupervisorName">Dr. XYZ Rao</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Seminar Schedule</h2>
+
+      <div class="info">
+        <strong>Date:</strong>
+        <span id="seminarDate">20 May 2026</span>
+      </div>
+
+      <div class="info">
+        <strong>Time:</strong>
+        <span id="seminarTime">2:00 PM</span>
+      </div>
+
+      <div class="info">
+        <strong>Mode:</strong>
+        <span id="seminarMode">Hybrid</span>
+      </div>
+
+      <div class="info">
+        <strong>Venue:</strong>
+        <span id="venue">Seminar Hall - 1</span>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <a class="btn" id="pptButton" href="#" target="_blank">
+        VIEW PPT
+      </a>
+
+      <a class="btn" id="teamsButton" href="#" target="_blank">
+        JOIN TEAMS MEETING
+      </a>
+    </div>
+
+    <div class="navigation">
+      <a class="nav-btn" href="#">
+        ← Previous Seminar
+      </a>
+
+      <a class="nav-btn" href="#">
+        Next Seminar →
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    Department Research Seminar Management System
+  </footer>
+
+  <script>
+
+    // =========================================
+    // GOOGLE SHEETS INTEGRATION
+    // =========================================
+
+    // STEP 1:
+    // Publish your Google Sheet as CSV
+    // File -> Share -> Publish to web
+    // Select the sheet and choose CSV format
+    // Paste the CSV link below
+
+    const sheetURL = "PASTE_YOUR_GOOGLE_SHEET_CSV_LINK_HERE";
+
+    // =========================================
+    // SAMPLE DATA (TEMPORARY)
+    // =========================================
+
+    // Until Google Sheets is connected,
+    // this sample data will be displayed.
+
+    const seminarData = {
+      seminarName: "Thesis",
+      seminarTitle: "Thermal Management of Li-ion Batteries",
+      scholarName: "Rakesh Paladugu",
+      scholarDesignation: "Research Scholar",
+      scholarCategory: "Internal - HTRA",
+      regId: "MECH2026RS001",
+      supervisorName: "Dr. ABC Kumar",
+      supervisorDesignation: "Professor",
+      coSupervisorName: "Dr. XYZ Rao",
+      seminarDate: "20 May 2026",
+      seminarTime: "2:00 PM",
+      seminarMode: "Hybrid",
+      venue: "Seminar Hall - 1",
+      pptLink: "https://example.com/ppt",
+      teamsLink: "https://teams.microsoft.com/example"
+    };
+
+    // =========================================
+    // AUTO-FILL PAGE
+    // =========================================
+
+    document.getElementById("seminarType").innerText = seminarData.seminarName;
+    document.getElementById("seminarTitle").innerText = seminarData.seminarTitle;
+    document.getElementById("scholarName").innerText = seminarData.scholarName;
+    document.getElementById("scholarDesignation").innerText = seminarData.scholarDesignation;
+    document.getElementById("scholarCategory").innerText = seminarData.scholarCategory;
+    document.getElementById("regId").innerText = seminarData.regId;
+    document.getElementById("supervisorName").innerText = seminarData.supervisorName;
+    document.getElementById("supervisorDesignation").innerText = seminarData.supervisorDesignation;
+    document.getElementById("coSupervisorName").innerText = seminarData.coSupervisorName;
+    document.getElementById("seminarDate").innerText = seminarData.seminarDate;
+    document.getElementById("seminarTime").innerText = seminarData.seminarTime;
+    document.getElementById("seminarMode").innerText = seminarData.seminarMode;
+    document.getElementById("venue").innerText = seminarData.venue;
+
+    document.getElementById("pptButton").href = seminarData.pptLink;
+    document.getElementById("teamsButton").href = seminarData.teamsLink;
+
+    // HIDE TEAMS BUTTON IF NO LINK
+
+    if (!seminarData.teamsLink) {
+      document.getElementById("teamsButton").style.display = "none";
+    }
+
+    // HIDE VENUE IF ONLINE
+
+    if (seminarData.seminarMode === "Online") {
+      document.getElementById("venue").parentElement.style.display = "none";
+    }
+
+  </script>
+
+</body>
+</html>
