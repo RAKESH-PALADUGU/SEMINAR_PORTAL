@@ -236,77 +236,130 @@
 
   <script>
 
-    // =========================================
-    // GOOGLE SHEETS INTEGRATION
-    // =========================================
+  // =========================================
+  // GOOGLE SHEET CSV LINK
+  // =========================================
 
-    // STEP 1:
-    // Publish your Google Sheet as CSV
-    // File -> Share -> Publish to web
-    // Select the sheet and choose CSV format
-    // Paste the CSV link below
+  const sheetURL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
 
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
+  // =========================================
+  // FETCH GOOGLE SHEET DATA
+  // =========================================
 
-    // =========================================
-    // SAMPLE DATA (TEMPORARY)
-    // =========================================
+  fetch(sheetURL)
+    .then(response => response.text())
+    .then(csvText => {
 
-    // Until Google Sheets is connected,
-    // this sample data will be displayed.
+      const rows = csvText.split("\n").map(row => row.split(","));
 
-    const seminarData = {
-      seminarName: "Thesis",
-      seminarTitle: "Thermal Management of Li-ion Batteries",
-      scholarName: "Rakesh Paladugu",
-      scholarDesignation: "Research Scholar",
-      scholarCategory: "Internal - HTRA",
-      regId: "MECH2026RS001",
-      supervisorName: "Dr. ABC Kumar",
-      supervisorDesignation: "Professor",
-      coSupervisorName: "Dr. XYZ Rao",
-      seminarDate: "20 May 2026",
-      seminarTime: "2:00 PM",
-      seminarMode: "Hybrid",
-      venue: "Seminar Hall - 1",
-      pptLink: "https://example.com/ppt",
-      teamsLink: "https://teams.microsoft.com/example"
-    };
+      const headers = rows[0];
 
-    // =========================================
-    // AUTO-FILL PAGE
-    // =========================================
+      // GET LATEST RESPONSE
+      const latestRow = rows[rows.length - 1];
 
-    document.getElementById("seminarType").innerText = seminarData.seminarName;
-    document.getElementById("seminarTitle").innerText = seminarData.seminarTitle;
-    document.getElementById("scholarName").innerText = seminarData.scholarName;
-    document.getElementById("scholarDesignation").innerText = seminarData.scholarDesignation;
-    document.getElementById("scholarCategory").innerText = seminarData.scholarCategory;
-    document.getElementById("regId").innerText = seminarData.regId;
-    document.getElementById("supervisorName").innerText = seminarData.supervisorName;
-    document.getElementById("supervisorDesignation").innerText = seminarData.supervisorDesignation;
-    document.getElementById("coSupervisorName").innerText = seminarData.coSupervisorName;
-    document.getElementById("seminarDate").innerText = seminarData.seminarDate;
-    document.getElementById("seminarTime").innerText = seminarData.seminarTime;
-    document.getElementById("seminarMode").innerText = seminarData.seminarMode;
-    document.getElementById("venue").innerText = seminarData.venue;
+      // CONVERT ROW INTO OBJECT
+      let rowData = {};
 
-    document.getElementById("pptButton").href = seminarData.pptLink;
-    document.getElementById("teamsButton").href = seminarData.teamsLink;
+      headers.forEach((header, index) => {
+        rowData[header.trim()] = latestRow[index]
+          ? latestRow[index].replace(/"/g, "").trim()
+          : "";
+      });
 
-    // HIDE TEAMS BUTTON IF NO LINK
+      console.log(rowData);
 
-    if (!seminarData.teamsLink) {
-      document.getElementById("teamsButton").style.display = "none";
-    }
+      // =========================================
+      // AUTO-FILL WEBPAGE
+      // =========================================
 
-    // HIDE VENUE IF ONLINE
+      document.getElementById("seminarType").innerText =
+        rowData["Seminar Name"];
 
-    if (seminarData.seminarMode === "Online") {
-      document.getElementById("venue").parentElement.style.display = "none";
-    }
+      document.getElementById("seminarTitle").innerText =
+        rowData["Title of the Seminar"];
 
-  </script>
+      document.getElementById("scholarName").innerText =
+        rowData["Scholar Name"];
 
+      document.getElementById("scholarDesignation").innerText =
+        rowData["Mode of Registration"] +
+        " - " +
+        rowData["Internal Scholar Type"];
+
+      document.getElementById("scholarCategory").innerText =
+        rowData["Mode of Registration"];
+
+      document.getElementById("regId").innerText =
+        rowData["Scholar Reg. ID"];
+
+      document.getElementById("supervisorName").innerText =
+        rowData["Supervisor Name"];
+
+      document.getElementById("supervisorDesignation").innerText =
+        rowData["Supervisor Designation"];
+
+      document.getElementById("coSupervisorName").innerText =
+        rowData["Co-Supervisor Name"];
+
+      document.getElementById("seminarDate").innerText =
+        rowData["Date of the Seminar"];
+
+      document.getElementById("seminarTime").innerText =
+        rowData["Time of the Seminar"];
+
+      document.getElementById("seminarMode").innerText =
+        rowData["Mode of Seminar"];
+
+      document.getElementById("venue").innerText =
+        rowData["Venue of the Seminar"];
+
+      // =========================================
+      // BUTTON LINKS
+      // =========================================
+
+      document.getElementById("pptButton").href =
+        rowData["PPT Shareable Link"];
+
+      document.getElementById("teamsButton").href =
+        rowData["Microsoft Teams Link"];
+
+      // =========================================
+      // HIDE TEAMS BUTTON IF EMPTY
+      // =========================================
+
+      if (
+        !rowData["Microsoft Teams Link"] ||
+        rowData["Microsoft Teams Link"] === ""
+      ) {
+        document.getElementById("teamsButton").style.display = "none";
+      }
+
+      // =========================================
+      // HIDE VENUE FOR ONLINE MODE
+      // =========================================
+
+      if (rowData["Mode of Seminar"] === "Online") {
+        document.getElementById("venue").parentElement.style.display = "none";
+      }
+
+      // =========================================
+      // HIDE CO-SUPERVISOR IF EMPTY
+      // =========================================
+
+      if (
+        !rowData["Co-Supervisor Name"] ||
+        rowData["Co-Supervisor Name"] === ""
+      ) {
+        document.getElementById("coSupervisorName")
+          .parentElement.style.display = "none";
+      }
+
+    })
+    .catch(error => {
+      console.error("Error loading Google Sheet:", error);
+    });
+
+</script>
 </body>
 </html>
