@@ -293,10 +293,9 @@ fetch(sheetURL + "&t=" + Date.now())
 
         seminars.push(rowData);
 
-    }
+    }        */
 
-    generateDashboard();        */
-// 1. Keep your correct IDs
+    // 1. Keep your correct IDs
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 const gid = "1424736644";
 
@@ -331,6 +330,9 @@ fetch(sheetURL + "&t=" + Date.now())
     generateDashboard();
   })
   .catch(err => console.error("Error fetching seminar data:", err));
+    
+
+    generateDashboard();       
     
 });
 
