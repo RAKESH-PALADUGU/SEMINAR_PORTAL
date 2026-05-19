@@ -30,6 +30,22 @@ header p{margin-top:10px;color:#cbd5e1;font-size:18px;}
     padding:30px 0;
 }
 
+/* SEARCH */
+.search-box{
+    margin-bottom:20px;
+}
+
+.search-box input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    outline:none;
+    font-size:16px;
+    background:#1e293b;
+    color:white;
+}
+
 .section-title{
     font-size:28px;
     margin-bottom:20px;
@@ -123,6 +139,12 @@ footer{
 
 <div class="container">
 
+    <!-- SEARCH -->
+    <div class="search-box">
+        <input id="searchBox" type="text"
+        placeholder="Search by Title / Scholar Name / Reg ID...">
+    </div>
+
     <div class="live-box">
         <div style="font-size:30px;">Today's Seminar</div>
         <div id="todaySeminar">Loading...</div>
@@ -164,6 +186,7 @@ const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?forma
 
 /* ---------------- STATE ---------------- */
 let seminars = [];
+let filtered = [];
 let countdownInterval = null;
 
 /* ---------------- DATE ---------------- */
@@ -218,11 +241,26 @@ async function loadData(){
         return obj;
     });
 
-    generateUI();
+    render(seminars);
 }
 
-/* ---------------- UI ---------------- */
-function generateUI(){
+/* ---------------- SEARCH ---------------- */
+document.getElementById("searchBox").addEventListener("input",(e)=>{
+    const q = e.target.value.toLowerCase();
+
+    filtered = seminars.filter(s=>{
+        return (
+            (s["Title of the Seminar"]||"").toLowerCase().includes(q) ||
+            (s["Scholar Name"]||"").toLowerCase().includes(q) ||
+            (s["Scholar Reg. ID"]||"").toLowerCase().includes(q)
+        );
+    });
+
+    render(filtered);
+});
+
+/* ---------------- RENDER ---------------- */
+function render(list){
 
     const up=document.getElementById("upcomingContainer");
     const prev=document.getElementById("previousContainer");
@@ -232,11 +270,10 @@ function generateUI(){
 
     let t=0,th=0,co=0,re=0;
 
-    const search = "";
+    const today=new Date();
+    today.setHours(0,0,0,0);
 
-    const sorted=[...seminars].sort((a,b)=>a._date-b._date);
-
-    const today=new Date(); today.setHours(0,0,0,0);
+    const sorted=[...list].sort((a,b)=>a._date-b._date);
 
     sorted.forEach(s=>{
 
@@ -247,16 +284,16 @@ function generateUI(){
             <div class="card-type">${s["Seminar Name"]}</div>
             <div class="card-title">${s["Title of the Seminar"]}</div>
             <div class="card-info"><b>${s["Scholar Name"]}</b></div>
-            <div class="card-info">Reg. ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
+            <div class="card-info">Reg ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
             <div class="card-info">${s["Date of the Seminar"]}</div>
         `;
 
-        /* CLICK FIX */
-        card.addEventListener("click", ()=>{
-            window.location.href = "seminar.html?id=" + encodeURIComponent(s.id);
-        });
+        card.onclick=()=>{
+            window.location.href="seminar.html?id="+encodeURIComponent(s.id);
+        };
 
-        const d=new Date(s._date); d.setHours(0,0,0,0);
+        const d=new Date(s._date);
+        d.setHours(0,0,0,0);
 
         if(d<today) prev.appendChild(card);
         else up.appendChild(card);
@@ -272,18 +309,15 @@ function generateUI(){
     document.getElementById("colloquiumCount").innerText=co;
     document.getElementById("researchCount").innerText=re;
 
-    setupToday();
+    setupToday(seminars);
 }
 
 /* ---------------- TODAY ---------------- */
-function setupToday(){
+function setupToday(data){
 
-    const todayStr =
-        String(new Date().getDate()).padStart(2,"0") + "/" +
-        String(new Date().getMonth()+1).padStart(2,"0") + "/" +
-        new Date().getFullYear();
+    const todayStr=getTodayStr();
 
-    const s = seminars.find(x=>x["Date of the Seminar"]===todayStr);
+    const s=data.find(x=>x["Date of the Seminar"]===todayStr);
 
     const box=document.getElementById("todaySeminar");
     const cd=document.getElementById("countdown");
@@ -329,7 +363,6 @@ setInterval(()=>{
 
 /* ---------------- INIT ---------------- */
 loadData();
-setInterval(loadData,60000);
 
 </script>
 
