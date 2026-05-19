@@ -250,6 +250,9 @@ fetch(sheetURL + "&t=" + Date.now())
         rowData[header] = currentValues[index] || "";
       });
       
+      // Save spreadsheet index layout position before any sorting occurs
+      rowData.originalIndex = i - 1;
+      
       seminars.push(rowData);
     }
 
@@ -260,6 +263,17 @@ fetch(sheetURL + "&t=" + Date.now())
     console.error("Error fetching seminar data:", err);
     document.getElementById("todaySeminar").innerText = "Error loading data. Verify spreadsheet access permissions.";
   });
+
+// Helper calculation engine that combines Date and Time text fields into a single sortable Object
+function getSeminarDateTimeObject(seminar) {
+    if (!seminar["Date of the Seminar"]) return new Date(0);
+    const dateParts = seminar["Date of the Seminar"].split("/");
+    const timeStr = seminar["Time of the Seminar"] || "00:00";
+    
+    // Assembles into a standardized timestamp format: YYYY-MM-DDTHH:MM:00
+    const formattedIsoString = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}T${timeStr}`;
+    return new Date(formattedIsoString);
+}
 
 function generateDashboard(){
     const upcomingContainer = document.getElementById("upcomingContainer");
@@ -272,7 +286,12 @@ function generateDashboard(){
     let colloquiumCount = 0;
     let researchCount = 0;
 
-    seminars.forEach((seminar, index) => {
+    // Sort timeline clone sequentially by actual timestamp values
+    const sortedSeminars = [...seminars].sort((a, b) => {
+        return getSeminarDateTimeObject(a) - getSeminarDateTimeObject(b);
+    });
+
+    sortedSeminars.forEach((seminar) => {
         if(!seminar["Date of the Seminar"] || !seminar["Seminar Name"]) return;
 
         const card = document.createElement("div");
@@ -281,14 +300,15 @@ function generateDashboard(){
             <div class="card-type">${seminar["Seminar Name"]}</div>
             <div class="card-title">${seminar["Title of the Seminar"]}</div>
             <div class="card-info">${seminar["Scholar Name"]}</div>
-            <div class="card-info">${seminar["Date of the Seminar"]}</div>
+            <div class="card-info">${seminar["Date of the Seminar"]} ${seminar["Time of the Seminar"] ? 'at ' + seminar["Time of the Seminar"] : ''}</div>
         `;
 
+        // Direct detail redirection mapped to true original indices
         card.onclick = () => {
-            window.location.href = "seminar.html?id=" + index;
+            window.location.href = "seminar.html?id=" + seminar.originalIndex;
         };
 
-        // Parse DD/MM/YYYY dates
+        // Parse day buckets
         const dateParts = seminar["Date of the Seminar"].split("/");
         const seminarDate = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
         seminarDate.setHours(0, 0, 0, 0); 
@@ -321,7 +341,7 @@ function generateDashboard(){
 
     // Evaluate Today's Seminars
     const today = new Date();
-    const todayFormatted = today.toLocaleDateString("en-GB"); // Format as DD/MM/YYYY
+    const todayFormatted = today.toLocaleDateString("en-GB"); 
 
     const todaysSeminar = seminars.find(seminar => {
         return seminar["Date of the Seminar"] === todayFormatted;
