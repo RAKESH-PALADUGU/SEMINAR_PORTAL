@@ -341,10 +341,21 @@ function loadSeminar(index) {
   document.getElementById("scholarName").innerText =
     rowData["Scholar Name"];
 
+  if (
+  rowData["Mode of Registration"] === "External"
+) {
+
+  document.getElementById("scholarDesignation").innerText =
+    "External";
+
+} else {
+
   document.getElementById("scholarDesignation").innerText =
     rowData["Mode of Registration"] +
     " - " +
     rowData["Internal Scholar Type"];
+
+}
 
   
   document.getElementById("regId").innerText =
