@@ -266,13 +266,12 @@ function generateUI(){
         card.className="card";
 
         card.innerHTML=`
-            <div class="card-type">${s["Seminar Name"]}</div>
-            <div class="card-title">${s["Title of the Seminar"]}</div>
-            <div class="card-info"><b>${s["Scholar Name"]}</b></div>
-            <div class="card-info">Reg. ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
-            <div class="card-info">⏱ ${SEMINAR_DURATION_MIN} min session</div>
-            <div class="card-info">${s["Date of the Seminar"]}</div>
-        `;
+    <div class="card-type">${s["Seminar Name"]}</div>
+    <div class="card-title">${s["Title of the Seminar"]}</div>
+    <div class="card-info"><b>${s["Scholar Name"]}</b></div>
+    <div class="card-info">Reg. ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
+    <div class="card-info">${s["Date of the Seminar"]}</div>
+`;
 
         card.addEventListener("click", ()=>{
             window.location.href = "seminar.html?id=" + encodeURIComponent(s.id);
