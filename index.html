@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Department Research Seminar Portal</title>
+<title>Department Seminar Portal</title>
 
 <style>
 body{
@@ -112,10 +111,6 @@ footer{
     padding:25px;
     color:#94a3b8;
 }
-
-@media(max-width:700px){
-    header h1{font-size:28px;}
-}
 </style>
 </head>
 
@@ -167,10 +162,11 @@ const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 const gid = "1424736644";
 const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
 
+/* ---------------- STATE ---------------- */
 let seminars = [];
 let countdownInterval = null;
 
-/* ---------------- SAFE DATE PARSER ---------------- */
+/* ---------------- DATE PARSER ---------------- */
 function parseDate(dateStr, timeStr="00:00"){
     if(!dateStr) return new Date(0);
 
@@ -180,14 +176,12 @@ function parseDate(dateStr, timeStr="00:00"){
     return new Date(yyyy, mm-1, dd, hh||0, mi||0);
 }
 
-/* ---------------- TODAY FORMAT ---------------- */
+/* ---------------- TODAY STRING ---------------- */
 function getTodayStr(){
     const d = new Date();
-    return (
-        String(d.getDate()).padStart(2,"0") + "/" +
-        String(d.getMonth()+1).padStart(2,"0") + "/" +
-        d.getFullYear()
-    );
+    return String(d.getDate()).padStart(2,"0") + "/" +
+           String(d.getMonth()+1).padStart(2,"0") + "/" +
+           d.getFullYear();
 }
 
 /* ---------------- FETCH DATA ---------------- */
@@ -259,6 +253,12 @@ function generateUI(){
             <div class="card-info">${s["Scholar Name"]}</div>
             <div class="card-info">${s["Date of the Seminar"]}</div>
         `;
+
+        /* ✅ FIXED CLICK NAVIGATION */
+        card.style.cursor = "pointer";
+        card.addEventListener("click", () => {
+            window.location.href = "seminar.html?id=" + encodeURIComponent(s.id);
+        });
 
         const d=new Date(s._date); d.setHours(0,0,0,0);
 
