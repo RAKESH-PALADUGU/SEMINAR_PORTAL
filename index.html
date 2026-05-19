@@ -3,155 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seminar Portal</title>
+
+<title>Department Research Seminar Portal</title>
 
 <style>
 body{
     margin:0;
-    font-family:Arial;
+    padding:0;
+    font-family:Arial,sans-serif;
     background:#0f172a;
     color:white;
 }
 
 header{
     background:linear-gradient(135deg,#1e3a8a,#2563eb);
+    padding:35px 20px;
     text-align:center;
-    padding:30px;
 }
+
+header h1{margin:0;font-size:38px;}
+header p{margin-top:10px;color:#cbd5e1;font-size:18px;}
 
 .container{
     width:90%;
     max-width:1200px;
     margin:auto;
-    padding:20px;
+    padding:30px 0;
 }
 
-.live-box{
-    background:#1e3a8a;
-    padding:20px;
-    border-radius:12px;
+.section-title{
+    font-size:28px;
+    margin-bottom:20px;
+    color:#60a5fa;
 }
-
-.countdown{color:#facc15;margin-top:10px;font-size:20px;}
-
-.section-title{color:#60a5fa;margin-top:30px;}
 
 .card-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:15px;
+    gap:20px;
 }
 
 .card{
     background:#111827;
-    padding:15px;
-    border-radius:10px;
+    border:1px solid #1e293b;
+    border-radius:14px;
+    padding:22px;
     cursor:pointer;
-    transition:0.2s;
+    transition:0.3s;
 }
 
-.card:hover{transform:scale(1.02);}
+.card:hover{
+    transform:translateY(-4px);
+    border-color:#2563eb;
+}
 
-.stats{
+.card-type{
+    display:inline-block;
+    background:#1d4ed8;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.card-title{font-size:22px;margin-bottom:15px;}
+.card-info{color:#cbd5e1;font-size:15px;margin:6px 0;}
+
+.live-box{
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
+    padding:25px;
+    border-radius:16px;
+    margin-bottom:40px;
+}
+
+.countdown{
+    font-size:22px;
+    margin-top:10px;
+    color:#facc15;
+}
+
+.stats-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-top:20px;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
 }
 
-.stat{
+.stat-card{
     background:#111827;
-    padding:15px;
-    border-radius:10px;
+    padding:25px;
+    border-radius:14px;
     text-align:center;
+    border:1px solid #1e293b;
 }
 
-.clock{text-align:center;margin-top:30px;color:#cbd5e1;}
+.stat-number{
+    font-size:36px;
+    color:#60a5fa;
+}
+
+.clock{
+    text-align:center;
+    margin-top:50px;
+    color:#cbd5e1;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#94a3b8;
+}
+
+@media(max-width:700px){
+    header h1{font-size:28px;}
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>Department Seminar Portal</h1>
+    <h1>Department of Mechanical Engineering</h1>
+    <p>Department Seminar Portal</p>
 </header>
 
 <div class="container">
 
-<div class="live-box">
-    <h2>Today's Seminar</h2>
-    <div id="today">Loading...</div>
-    <div class="countdown" id="countdown"></div>
+    <div class="live-box">
+        <div style="font-size:30px;">Today's Seminar</div>
+        <div id="todaySeminar">Loading...</div>
+        <div class="countdown" id="countdown"></div>
+    </div>
+
+    <h2 class="section-title">Upcoming Seminars</h2>
+    <div class="card-grid" id="upcomingContainer"></div>
+
+    <h2 class="section-title">Previous Seminars</h2>
+    <div class="card-grid" id="previousContainer"></div>
+
+    <h2 class="section-title">Department Statistics</h2>
+    <div class="stats-grid">
+        <div class="stat-card"><div>Total</div><div class="stat-number" id="totalSeminars">0</div></div>
+        <div class="stat-card"><div>Thesis</div><div class="stat-number" id="thesisCount">0</div></div>
+        <div class="stat-card"><div>Colloquium</div><div class="stat-number" id="colloquiumCount">0</div></div>
+        <div class="stat-card"><div>Research</div><div class="stat-number" id="researchCount">0</div></div>
+    </div>
+
+    <div class="clock">
+        <div id="liveDate"></div>
+        <div id="liveTime"></div>
+    </div>
+
 </div>
 
-<h2 class="section-title">Upcoming</h2>
-<div id="upcoming" class="card-grid"></div>
-
-<h2 class="section-title">Previous</h2>
-<div id="previous" class="card-grid"></div>
-
-<h2 class="section-title">Stats</h2>
-<div class="stats">
-    <div class="stat">Total<br><span id="total">0</span></div>
-    <div class="stat">Thesis<br><span id="thesis">0</span></div>
-    <div class="stat">Colloquium<br><span id="colloquium">0</span></div>
-    <div class="stat">Research<br><span id="research">0</span></div>
-</div>
-
-<div class="clock">
-<div id="date"></div>
-<div id="time"></div>
-</div>
-
-</div>
+<footer>
+Seminar Management System<br>
+VFSTR, Vadlamudi
+</footer>
 
 <script>
 
-/* ================= CONFIG ================= */
-const API_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+/* ---------------- CONFIG ---------------- */
+const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
+const gid = "1424736644";
+const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
 
-/* ================= STATE ================= */
 let seminars = [];
-let countdown = null;
+let countdownInterval = null;
 
-/* ================= DATE ================= */
-function parseDate(d,t="00:00"){
-    const [dd,mm,yy] = d.split("/").map(Number);
-    const [hh,mi] = t.split(":").map(Number);
-    return new Date(yy,mm-1,dd,hh||0,mi||0);
+/* ---------------- SAFE DATE PARSER ---------------- */
+function parseDate(dateStr, timeStr="00:00"){
+    if(!dateStr) return new Date(0);
+
+    const [dd,mm,yyyy] = dateStr.split("/").map(Number);
+    const [hh,mi] = (timeStr || "00:00").split(":").map(Number);
+
+    return new Date(yyyy, mm-1, dd, hh||0, mi||0);
 }
 
-function todayStr(){
-    const d=new Date();
-    return String(d.getDate()).padStart(2,"0")+"/"+
-           String(d.getMonth()+1).padStart(2,"0")+"/"+
-           d.getFullYear();
+/* ---------------- TODAY FORMAT ---------------- */
+function getTodayStr(){
+    const d = new Date();
+    return (
+        String(d.getDate()).padStart(2,"0") + "/" +
+        String(d.getMonth()+1).padStart(2,"0") + "/" +
+        d.getFullYear()
+    );
 }
 
-/* ================= FETCH ================= */
-async function load(){
-    const res = await fetch(API_URL);
-    const data = await res.json();
+/* ---------------- FETCH DATA ---------------- */
+async function loadData(){
+    try{
+        const res = await fetch(sheetURL + "&t=" + Date.now());
+        const csv = await res.text();
 
-    seminars = data.map((s,i)=>({
-        ...s,
-        _date: parseDate(s["Date of the Seminar"], s["Time of the Seminar"]),
-        id:i
-    }));
+        const lines = csv.split(/\r?\n/);
 
-    render();
+        const parseRow = (text)=>{
+            let out=[],cur="",q=false;
+            for(let c of text){
+                if(c=='"') q=!q;
+                else if(c==',' && !q){out.push(cur);cur="";}
+                else cur+=c;
+            }
+            out.push(cur);
+            return out.map(v=>v.replace(/^"|"$/g,'').trim());
+        };
+
+        const headers = parseRow(lines[0]);
+
+        seminars = lines.slice(1)
+        .filter(l=>l.trim())
+        .map((l,i)=>{
+            const v=parseRow(l);
+            let obj={};
+
+            headers.forEach((h,j)=>obj[h]=v[j]||"");
+
+            obj._date = parseDate(obj["Date of the Seminar"],obj["Time of the Seminar"]);
+            obj.id = i;
+
+            return obj;
+        });
+
+        generateUI();
+    }
+    catch(err){
+        console.error(err);
+        document.getElementById("todaySeminar").innerText="Error loading data";
+    }
 }
 
-/* ================= RENDER ================= */
-function render(){
+/* ---------------- UI ---------------- */
+function generateUI(){
 
-    const up=document.getElementById("upcoming");
-    const prev=document.getElementById("previous");
+    const up=document.getElementById("upcomingContainer");
+    const prev=document.getElementById("previousContainer");
 
     up.innerHTML="";
     prev.innerHTML="";
 
-    let t=0,th=0,co=0,re=0;
+    let thesis=0,colo=0,rese=0;
 
     const sorted=[...seminars].sort((a,b)=>a._date-b._date);
 
@@ -163,87 +254,89 @@ function render(){
         card.className="card";
 
         card.innerHTML=`
-            <b>${s["Seminar Name"]}</b><br>
-            ${s["Title of the Seminar"]}<br>
-            ${s["Scholar Name"]}<br>
-            ${s["Date of the Seminar"]}
+            <div class="card-type">${s["Seminar Name"]}</div>
+            <div class="card-title">${s["Title of the Seminar"]}</div>
+            <div class="card-info">${s["Scholar Name"]}</div>
+            <div class="card-info">${s["Date of the Seminar"]}</div>
         `;
-
-        card.onclick=()=>{
-            window.location.href="seminar.html?id="+s.id;
-        };
 
         const d=new Date(s._date); d.setHours(0,0,0,0);
 
         if(d<today) prev.appendChild(card);
         else up.appendChild(card);
 
-        t++;
-        if(s["Seminar Name"]==="Thesis") th++;
-        if(s["Seminar Name"]==="Colloquium") co++;
-        if(s["Seminar Name"]==="Research Seminar") re++;
+        if(s["Seminar Name"]==="Thesis") thesis++;
+        if(s["Seminar Name"]==="Colloquium") colo++;
+        if(s["Seminar Name"]==="Research Seminar") rese++;
     });
 
-    document.getElementById("total").innerText=t;
-    document.getElementById("thesis").innerText=th;
-    document.getElementById("colloquium").innerText=co;
-    document.getElementById("research").innerText=re;
+    document.getElementById("totalSeminars").innerText=seminars.length;
+    document.getElementById("thesisCount").innerText=thesis;
+    document.getElementById("colloquiumCount").innerText=colo;
+    document.getElementById("researchCount").innerText=rese;
 
-    todaySection();
+    setupToday();
 }
 
-/* ================= TODAY ================= */
-function todaySection(){
+/* ---------------- TODAY + COUNTDOWN ---------------- */
+function setupToday(){
 
-    const tStr=todayStr();
+    const todayStr=getTodayStr();
 
-    const s=seminars.find(x=>x["Date of the Seminar"]===tStr);
+    const todaySeminar=seminars.find(s=>s["Date of the Seminar"]===todayStr);
 
-    const box=document.getElementById("today");
+    const box=document.getElementById("todaySeminar");
     const cd=document.getElementById("countdown");
 
-    if(!s){
+    if(!todaySeminar){
         box.innerText="No seminar today";
         cd.innerText="";
         return;
     }
 
-    box.innerHTML=`<b>${s["Seminar Name"]}</b><br>${s["Title of the Seminar"]}`;
+    box.innerHTML=`
+        <h3>${todaySeminar["Seminar Name"]}</h3>
+        <p>${todaySeminar["Title of the Seminar"]}</p>
+    `;
 
-    const target=s._date;
+    const target=todaySeminar._date;
 
-    if(countdown) clearInterval(countdown);
+    if(countdownInterval) clearInterval(countdownInterval);
 
-    countdown=setInterval(()=>{
+    countdownInterval=setInterval(()=>{
 
         const now=new Date();
         const diff=target-now;
 
         if(diff<=0){
             cd.innerText="LIVE NOW";
-            clearInterval(countdown);
+            clearInterval(countdownInterval);
             return;
         }
 
+        const d=Math.floor(diff/86400000);
         const h=Math.floor(diff/3600000)%24;
         const m=Math.floor(diff/60000)%60;
-        const sec=Math.floor(diff/1000)%60;
+        const s=Math.floor(diff/1000)%60;
 
-        cd.innerText=`${h}h ${m}m ${sec}s`;
+        cd.innerText=`${d}d ${h}h ${m}m ${s}s`;
 
     },1000);
 }
 
-/* ================= CLOCK ================= */
-setInterval(()=>{
+/* ---------------- CLOCK ---------------- */
+function clock(){
     const n=new Date();
-    document.getElementById("date").innerText=n.toLocaleDateString();
-    document.getElementById("time").innerText=n.toLocaleTimeString();
-},1000);
+    document.getElementById("liveDate").innerText=n.toLocaleDateString();
+    document.getElementById("liveTime").innerText=n.toLocaleTimeString();
+}
 
-/* ================= AUTO REFRESH ================= */
-load();
-setInterval(load,60000);
+setInterval(clock,1000);
+clock();
+
+/* ---------------- AUTO REFRESH ---------------- */
+loadData();
+setInterval(loadData,60000);
 
 </script>
 
