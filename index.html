@@ -259,43 +259,7 @@ Department Research Seminar Management System
 //const sheetURL =
 //"https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
 
-/*
-// Paste your real spreadsheet ID inside the quotes below:
-const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU"; 
-const gid = "1424736644";
-
-const sheetURL = "https://docs.google.com/spreadsheets/d/" + sheetID + "/gviz/tq?tqx=out:csv&gid=" + gid;
-
-    
-let seminars = [];
-
-// Append a unique timestamp to the URL so it never uses a cached copy
-fetch(sheetURL + "&t=" + Date.now())
-.then(response => response.text())
-.then(csvText => {
-
-    const rows = csvText.split("\n").map(row => row.split(","));
-
-    const headers = rows[0];
-
-    for(let i=1;i<rows.length;i++){
-
-        let rowData = {};
-
-        headers.forEach((header,index)=>{
-
-            rowData[header.trim()] =
-            rows[i][index]
-            ? rows[i][index].replace(/"/g,"").trim()
-            : "";
-
-        });
-
-        seminars.push(rowData);
-
-    }        */
-
-    // 1. Keep your correct IDs
+// 1. Keep your correct IDs
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 const gid = "1424736644";
 
@@ -327,65 +291,47 @@ fetch(sheetURL + "&t=" + Date.now())
       });
       seminars.push(rowData);
     }
+    // Only generate dashboard once data is fully ready
     generateDashboard();
   })
-  .catch(err => console.error("Error fetching seminar data:", err));
-    
-
-    generateDashboard();       
-    
-});
+  .catch(err => {
+    console.error("Error fetching seminar data:", err);
+    document.getElementById("todaySeminar").innerText = "Error loading data. Check spreadsheet access permissions.";
+  });
 
 function generateDashboard(){
+    const upcomingContainer = document.getElementById("upcomingContainer");
+    const previousContainer = document.getElementById("previousContainer");
 
-    const upcomingContainer =
-    document.getElementById("upcomingContainer");
-
-    const previousContainer =
-    document.getElementById("previousContainer");
+    // Clear old container data to prevent appending duplicates on refresh
+    upcomingContainer.innerHTML = "";
+    previousContainer.innerHTML = "";
 
     let thesisCount = 0;
     let colloquiumCount = 0;
     let researchCount = 0;
 
-    seminars.forEach((seminar,index)=>{
+    seminars.forEach((seminar, index) => {
+        // Skip malformed entries safely
+        if(!seminar["Date of the Seminar"] || !seminar["Seminar Name"]) return;
 
         const card = document.createElement("div");
-
         card.className = "card";
-
         card.innerHTML = `
-
-        <div class="card-type">
-        ${seminar["Seminar Name"]}
-        </div>
-
-        <div class="card-title">
-        ${seminar["Title of the Seminar"]}
-        </div>
-
-        <div class="card-info">
-        ${seminar["Scholar Name"]}
-        </div>
-
-        <div class="card-info">
-        ${seminar["Date of the Seminar"]}
-        </div>
-
+            <div class="card-type">${seminar["Seminar Name"]}</div>
+            <div class="card-title">${seminar["Title of the Seminar"]}</div>
+            <div class="card-info">${seminar["Scholar Name"]}</div>
+            <div class="card-info">${seminar["Date of the Seminar"]}</div>
         `;
 
         card.onclick = () => {
-
-            window.location.href =
-            "seminar.html?id=" + index;
-
+            window.location.href = "seminar.html?id=" + index;
         };
 
         // 1. Convert "DD/MM/YYYY" from the sheet into a valid Date object
-       const dateParts = seminar["Date of the Seminar"].split("/");
-        // JavaScript months are 0-indexed (January is 0, May is 4), so we subtract 1 from the month
+        const dateParts = seminar["Date of the Seminar"].split("/");
         const seminarDate = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
-        seminarDate.setHours(0, 0, 0, 0); // Reset time to midnight for accurate day comparison
+        seminarDate.setHours(0, 0, 0, 0); 
 
         // 2. Get today's date at midnight
         const todayCompare = new Date();
@@ -399,163 +345,77 @@ function generateDashboard(){
         }
 
         // COUNTS
-
         if(seminar["Seminar Name"] === "Thesis"){
             thesisCount++;
         }
-
         if(seminar["Seminar Name"] === "Colloquium"){
             colloquiumCount++;
         }
-
         if(seminar["Seminar Name"] === "Research Seminar"){
             researchCount++;
         }
-
     });
 
-    document.getElementById("totalSeminars")
-    .innerText = seminars.length;
-
-    document.getElementById("thesisCount")
-    .innerText = thesisCount;
-
-    document.getElementById("colloquiumCount")
-    .innerText = colloquiumCount;
-
-    document.getElementById("researchCount")
-    .innerText = researchCount;
+    document.getElementById("totalSeminars").innerText = seminars.length;
+    document.getElementById("thesisCount").innerText = thesisCount;
+    document.getElementById("colloquiumCount").innerText = colloquiumCount;
+    document.getElementById("researchCount").innerText = researchCount;
 
     // TODAY'S SEMINAR
-
     const today = new Date();
+    const todayFormatted = today.toLocaleDateString("en-GB");
 
-const todayFormatted =
-today.toLocaleDateString("en-GB");
+    const todaysSeminar = seminars.find(seminar => {
+        return seminar["Date of the Seminar"] === todayFormatted;
+    });
 
-const todaysSeminar =
-seminars.find(seminar => {
+    if(todaysSeminar){
+        document.getElementById("todaySeminar").innerHTML = `
+            <h2>${todaysSeminar["Seminar Name"]}</h2>
+            <h3>${todaysSeminar["Title of the Seminar"]}</h3>
+            <p>by ${todaysSeminar["Scholar Name"]}</p>
+        `;
 
-    return seminar["Date of the Seminar"]
-    === todayFormatted;
+        // COUNTDOWN TIMER
+        const seminarDate = todaysSeminar["Date of the Seminar"];
+        const seminarTime = todaysSeminar["Time of the Seminar"];
+        const parts = seminarDate.split("/");
+        const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        const targetDateTime = new Date(`${formattedDate} ${seminarTime}`);
 
-});
+        function updateCountdown(){
+            const now = new Date();
+            const difference = targetDateTime - now;
 
-if(todaysSeminar){
+            if(difference <= 0){
+                document.getElementById("countdown").innerText = "LIVE NOW";
+                return;
+            }
 
-    document.getElementById("todaySeminar")
-    .innerHTML = `
+            const days = Math.floor(difference / (1000*60*60*24));
+            const hours = Math.floor((difference % (1000*60*60*24)) / (1000*60*60));
+            const minutes = Math.floor((difference % (1000*60*60)) / (1000*60));
+            const seconds = Math.floor((difference % (1000*60)) / 1000);
 
-    <h2>
-    ${todaysSeminar["Seminar Name"]}
-    </h2>
+            document.getElementById("countdown").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
 
-    <h3>
-    ${todaysSeminar["Title of the Seminar"]}
-    </h3>
-
-    <p>
-    by ${todaysSeminar["Scholar Name"]}
-    </p>
-
-    `;
-    // =========================================
-// COUNTDOWN TIMER
-// =========================================
-
-const seminarDate =
-todaysSeminar["Date of the Seminar"];
-
-const seminarTime =
-todaysSeminar["Time of the Seminar"];
-
-// CONVERT DD/MM/YYYY
-
-const parts = seminarDate.split("/");
-
-const formattedDate =
-`${parts[2]}-${parts[1]}-${parts[0]}`;
-
-// CREATE TARGET TIME
-
-const targetDateTime =
-new Date(`${formattedDate} ${seminarTime}`);
-
-// UPDATE COUNTDOWN
-
-function updateCountdown(){
-
-    const now = new Date();
-
-    const difference =
-    targetDateTime - now;
-
-    if(difference <= 0){
-
-        document.getElementById("countdown")
-        .innerText = "LIVE NOW";
-
-        return;
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    } else {
+        document.getElementById("todaySeminar").innerHTML = "No seminar scheduled for today.";
+        document.getElementById("countdown").innerText = "";
     }
-
-    const days =
-    Math.floor(difference / (1000*60*60*24));
-
-    const hours =
-    Math.floor((difference % (1000*60*60*24))
-    / (1000*60*60));
-
-    const minutes =
-    Math.floor((difference % (1000*60*60))
-    / (1000*60));
-
-    const seconds =
-    Math.floor((difference % (1000*60))
-    / 1000);
-
-    document.getElementById("countdown")
-    .innerText =
-    `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-}
-
-setInterval(updateCountdown,1000);
-
-updateCountdown();
-
-}else{
-
-    document.getElementById("todaySeminar")
-    .innerHTML =
-    "No seminar scheduled for today.";
-    document.getElementById("countdown")
-.innerText = "";
-
-}
-
 }
 
 // LIVE CLOCK
-
 function updateClock(){
-
     const now = new Date();
-
-    document.getElementById("liveDate")
-    .innerText =
-    now.toLocaleDateString();
-
-    document.getElementById("liveTime")
-    .innerText =
-    now.toLocaleTimeString();
-
+    document.getElementById("liveDate").innerText = now.toLocaleDateString();
+    document.getElementById("liveTime").innerText = now.toLocaleTimeString();
 }
-
-setInterval(updateClock,1000);
-
+setInterval(updateClock, 1000);
 updateClock();
-
-</script>
 
 </body>
 </html>
