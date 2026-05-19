@@ -36,6 +36,32 @@ header p{margin-top:10px;color:#cbd5e1;font-size:18px;}
     color:#60a5fa;
 }
 
+/* SEARCH + FILTER */
+.top-controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+input{
+    flex:1;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+}
+
+button{
+    padding:10px 14px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    background:#1d4ed8;
+    color:white;
+}
+
+button:hover{background:#2563eb;}
+
 .card-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -129,6 +155,15 @@ footer{
         <div class="countdown" id="countdown"></div>
     </div>
 
+    <!-- SEARCH + FILTER -->
+    <div class="top-controls">
+        <input id="searchBox" placeholder="Search seminars...">
+        <button onclick="filterType='ALL';generateUI()">All</button>
+        <button onclick="filterType='Thesis';generateUI()">Thesis</button>
+        <button onclick="filterType='Colloquium';generateUI()">Colloquium</button>
+        <button onclick="filterType='Research Seminar';generateUI()">Research</button>
+    </div>
+
     <h2 class="section-title">Upcoming Seminars</h2>
     <div class="card-grid" id="upcomingContainer"></div>
 
@@ -165,8 +200,9 @@ const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?forma
 /* ---------------- STATE ---------------- */
 let seminars = [];
 let countdownInterval = null;
+let filterType = "ALL";
 
-/* ---------------- DATE PARSER ---------------- */
+/* ---------------- DATE ---------------- */
 function parseDate(dateStr, timeStr="00:00"){
     if(!dateStr) return new Date(0);
 
@@ -176,55 +212,41 @@ function parseDate(dateStr, timeStr="00:00"){
     return new Date(yyyy, mm-1, dd, hh||0, mi||0);
 }
 
-/* ---------------- TODAY STRING ---------------- */
-function getTodayStr(){
-    const d = new Date();
-    return String(d.getDate()).padStart(2,"0") + "/" +
-           String(d.getMonth()+1).padStart(2,"0") + "/" +
-           d.getFullYear();
-}
-
-/* ---------------- FETCH DATA ---------------- */
+/* ---------------- FETCH ---------------- */
 async function loadData(){
-    try{
-        const res = await fetch(sheetURL + "&t=" + Date.now());
-        const csv = await res.text();
+    const res = await fetch(sheetURL + "&t=" + Date.now());
+    const csv = await res.text();
 
-        const lines = csv.split(/\r?\n/);
+    const lines = csv.split(/\r?\n/);
 
-        const parseRow = (text)=>{
-            let out=[],cur="",q=false;
-            for(let c of text){
-                if(c=='"') q=!q;
-                else if(c==',' && !q){out.push(cur);cur="";}
-                else cur+=c;
-            }
-            out.push(cur);
-            return out.map(v=>v.replace(/^"|"$/g,'').trim());
-        };
+    const parseRow = (text)=>{
+        let out=[],cur="",q=false;
+        for(let c of text){
+            if(c=='"') q=!q;
+            else if(c==',' && !q){out.push(cur);cur="";}
+            else cur+=c;
+        }
+        out.push(cur);
+        return out.map(v=>v.replace(/^"|"$/g,'').trim());
+    };
 
-        const headers = parseRow(lines[0]);
+    const headers = parseRow(lines[0]);
 
-        seminars = lines.slice(1)
-        .filter(l=>l.trim())
-        .map((l,i)=>{
-            const v=parseRow(l);
-            let obj={};
+    seminars = lines.slice(1)
+    .filter(l=>l.trim())
+    .map((l,i)=>{
+        const v=parseRow(l);
+        let obj={};
 
-            headers.forEach((h,j)=>obj[h]=v[j]||"");
+        headers.forEach((h,j)=>obj[h]=v[j]||"");
 
-            obj._date = parseDate(obj["Date of the Seminar"],obj["Time of the Seminar"]);
-            obj.id = i;
+        obj._date = parseDate(obj["Date of the Seminar"],obj["Time of the Seminar"]);
+        obj.id = i;
 
-            return obj;
-        });
+        return obj;
+    });
 
-        generateUI();
-    }
-    catch(err){
-        console.error(err);
-        document.getElementById("todaySeminar").innerText="Error loading data";
-    }
+    generateUI();
 }
 
 /* ---------------- UI ---------------- */
@@ -236,13 +258,23 @@ function generateUI(){
     up.innerHTML="";
     prev.innerHTML="";
 
-    let thesis=0,colo=0,rese=0;
+    let t=0,th=0,co=0,re=0;
+
+    const search = document.getElementById("searchBox").value.toLowerCase();
 
     const sorted=[...seminars].sort((a,b)=>a._date-b._date);
 
     const today=new Date(); today.setHours(0,0,0,0);
 
     sorted.forEach(s=>{
+
+        const matchFilter = filterType==="ALL" || s["Seminar Name"]===filterType;
+
+        const matchSearch =
+            (s["Title of the Seminar"]||"").toLowerCase().includes(search) ||
+            (s["Scholar Name"]||"").toLowerCase().includes(search);
+
+        if(!matchFilter || !matchSearch) return;
 
         const card=document.createElement("div");
         card.className="card";
@@ -254,9 +286,8 @@ function generateUI(){
             <div class="card-info">${s["Date of the Seminar"]}</div>
         `;
 
-        /* ✅ FIXED CLICK NAVIGATION */
-        card.style.cursor = "pointer";
-        card.addEventListener("click", () => {
+        /* ✅ FIXED CLICK (bulletproof) */
+        card.addEventListener("click", function(){
             window.location.href = "seminar.html?id=" + encodeURIComponent(s.id);
         });
 
@@ -265,41 +296,42 @@ function generateUI(){
         if(d<today) prev.appendChild(card);
         else up.appendChild(card);
 
-        if(s["Seminar Name"]==="Thesis") thesis++;
-        if(s["Seminar Name"]==="Colloquium") colo++;
-        if(s["Seminar Name"]==="Research Seminar") rese++;
+        t++;
+        if(s["Seminar Name"]==="Thesis") th++;
+        if(s["Seminar Name"]==="Colloquium") co++;
+        if(s["Seminar Name"]==="Research Seminar") re++;
     });
 
-    document.getElementById("totalSeminars").innerText=seminars.length;
-    document.getElementById("thesisCount").innerText=thesis;
-    document.getElementById("colloquiumCount").innerText=colo;
-    document.getElementById("researchCount").innerText=rese;
+    document.getElementById("totalSeminars").innerText=t;
+    document.getElementById("thesisCount").innerText=th;
+    document.getElementById("colloquiumCount").innerText=co;
+    document.getElementById("researchCount").innerText=re;
 
     setupToday();
 }
 
-/* ---------------- TODAY + COUNTDOWN ---------------- */
+/* ---------------- TODAY ---------------- */
 function setupToday(){
 
-    const todayStr=getTodayStr();
+    const todayStr =
+        String(new Date().getDate()).padStart(2,"0") + "/" +
+        String(new Date().getMonth()+1).padStart(2,"0") + "/" +
+        new Date().getFullYear();
 
-    const todaySeminar=seminars.find(s=>s["Date of the Seminar"]===todayStr);
+    const s = seminars.find(x=>x["Date of the Seminar"]===todayStr);
 
     const box=document.getElementById("todaySeminar");
     const cd=document.getElementById("countdown");
 
-    if(!todaySeminar){
+    if(!s){
         box.innerText="No seminar today";
         cd.innerText="";
         return;
     }
 
-    box.innerHTML=`
-        <h3>${todaySeminar["Seminar Name"]}</h3>
-        <p>${todaySeminar["Title of the Seminar"]}</p>
-    `;
+    box.innerHTML=`<b>${s["Seminar Name"]}</b><br>${s["Title of the Seminar"]}`;
 
-    const target=todaySeminar._date;
+    const target=s._date;
 
     if(countdownInterval) clearInterval(countdownInterval);
 
@@ -314,29 +346,27 @@ function setupToday(){
             return;
         }
 
-        const d=Math.floor(diff/86400000);
         const h=Math.floor(diff/3600000)%24;
         const m=Math.floor(diff/60000)%60;
-        const s=Math.floor(diff/1000)%60;
+        const s2=Math.floor(diff/1000)%60;
 
-        cd.innerText=`${d}d ${h}h ${m}m ${s}s`;
+        cd.innerText=`${h}h ${m}m ${s2}s`;
 
     },1000);
 }
 
 /* ---------------- CLOCK ---------------- */
-function clock(){
+setInterval(()=>{
     const n=new Date();
     document.getElementById("liveDate").innerText=n.toLocaleDateString();
     document.getElementById("liveTime").innerText=n.toLocaleTimeString();
-}
+},1000);
 
-setInterval(clock,1000);
-clock();
-
-/* ---------------- AUTO REFRESH ---------------- */
+/* ---------------- INIT ---------------- */
 loadData();
 setInterval(loadData,60000);
+
+document.getElementById("searchBox").addEventListener("input",generateUI);
 
 </script>
 
