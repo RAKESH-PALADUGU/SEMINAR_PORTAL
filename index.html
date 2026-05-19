@@ -259,6 +259,7 @@ Department Research Seminar Management System
 //const sheetURL =
 //"https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
 
+/*
 // Paste your real spreadsheet ID inside the quotes below:
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU"; 
 const gid = "1424736644";
@@ -294,8 +295,43 @@ fetch(sheetURL + "&t=" + Date.now())
 
     }
 
-    generateDashboard();
+    generateDashboard();        */
+// 1. Keep your correct IDs
+const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
+const gid = "1424736644";
 
+// 2. Use the direct export endpoint instead of gviz (fixes the delay AND the UI issue)
+const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
+
+let seminars = [];
+
+// Append a unique timestamp to force Google to give you the absolute latest data instantly
+fetch(sheetURL + "&t=" + Date.now())
+  .then(response => {
+    if (!response.ok) throw new Error("Network response was not ok");
+    return response.text();
+  })
+  .then(csvText => {
+    // Split rows safely handling potential carriage returns (\r)
+    const rows = csvText.split(/\r?\n/).map(row => row.split(","));
+    const headers = rows[0];
+    
+    seminars = []; // Clear array to prevent duplicates
+    for (let i = 1; i < rows.length; i++) {
+      if (!rows[i] || rows[i].length <= 1) continue; // Skip empty rows
+      
+      let rowData = {};
+      headers.forEach((header, index) => {
+        let cleanHeader = header.replace(/"/g, "").trim();
+        let cleanValue = rows[i][index] ? rows[i][index].replace(/"/g, "").trim() : "";
+        rowData[cleanHeader] = cleanValue;
+      });
+      seminars.push(rowData);
+    }
+    generateDashboard();
+  })
+  .catch(err => console.error("Error fetching seminar data:", err));
+    
 });
 
 function generateDashboard(){
