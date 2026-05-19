@@ -180,17 +180,17 @@ VFSTR, Vadlamudi
 
 <script>
 
-/* ---------------- CONFIG ---------------- */
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 const gid = "1424736644";
 const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
 
-/* ---------------- STATE ---------------- */
 let seminars = [];
-let filtered = [];
 let countdownInterval = null;
 
-/* ---------------- DATE ---------------- */
+// ⏱️ DEFAULT SEMINAR DURATION (minutes)
+const SEMINAR_DURATION_MIN = 60;
+
+/* ---------------- DATE PARSER ---------------- */
 function parseDate(dateStr, timeStr="00:00"){
     if(!dateStr) return new Date(0);
 
@@ -200,7 +200,7 @@ function parseDate(dateStr, timeStr="00:00"){
     return new Date(yyyy, mm-1, dd, hh||0, mi||0);
 }
 
-/* ---------------- TODAY ---------------- */
+/* ---------------- TODAY STRING ---------------- */
 function getTodayStr(){
     const d = new Date();
     return String(d.getDate()).padStart(2,"0") + "/" +
@@ -237,31 +237,17 @@ async function loadData(){
         headers.forEach((h,j)=>obj[h]=v[j]||"");
 
         obj._date = parseDate(obj["Date of the Seminar"],obj["Time of the Seminar"]);
+        obj._end = new Date(obj._date.getTime() + SEMINAR_DURATION_MIN*60000); // ⏱️ END TIME
         obj.id = i;
 
         return obj;
     });
 
-    render(seminars);
+    generateUI();
 }
 
-/* ---------------- SEARCH ---------------- */
-document.getElementById("searchBox").addEventListener("input",(e)=>{
-    const q = e.target.value.toLowerCase();
-
-    filtered = seminars.filter(s=>{
-        return (
-            (s["Title of the Seminar"]||"").toLowerCase().includes(q) ||
-            (s["Scholar Name"]||"").toLowerCase().includes(q) ||
-            (s["Scholar Reg. ID"]||"").toLowerCase().includes(q)
-        );
-    });
-
-    render(filtered);
-});
-
-/* ---------------- RENDER ---------------- */
-function render(list){
+/* ---------------- UI ---------------- */
+function generateUI(){
 
     const up=document.getElementById("upcomingContainer");
     const prev=document.getElementById("previousContainer");
@@ -271,10 +257,8 @@ function render(list){
 
     let t=0,th=0,co=0,re=0;
 
-    const today=new Date();
-    today.setHours(0,0,0,0);
-
-    const sorted=[...list].sort((a,b)=>a._date-b._date);
+    const sorted=[...seminars].sort((a,b)=>a._date-b._date);
+    const today=new Date(); today.setHours(0,0,0,0);
 
     sorted.forEach(s=>{
 
@@ -285,16 +269,16 @@ function render(list){
             <div class="card-type">${s["Seminar Name"]}</div>
             <div class="card-title">${s["Title of the Seminar"]}</div>
             <div class="card-info"><b>${s["Scholar Name"]}</b></div>
-            <div class="card-info">Reg ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
+            <div class="card-info">Reg. ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
+            <div class="card-info">⏱ ${SEMINAR_DURATION_MIN} min session</div>
             <div class="card-info">${s["Date of the Seminar"]}</div>
         `;
 
-        card.onclick=()=>{
-            window.location.href="seminar.html?id="+encodeURIComponent(s.id);
-        };
+        card.addEventListener("click", ()=>{
+            window.location.href = "seminar.html?id=" + encodeURIComponent(s.id);
+        });
 
-        const d=new Date(s._date);
-        d.setHours(0,0,0,0);
+        const d=new Date(s._date); d.setHours(0,0,0,0);
 
         if(d<today) prev.appendChild(card);
         else up.appendChild(card);
@@ -310,47 +294,51 @@ function render(list){
     document.getElementById("colloquiumCount").innerText=co;
     document.getElementById("researchCount").innerText=re;
 
-    setupToday(seminars);
+    setupToday();
 }
 
-/* ---------------- TODAY ---------------- */
-function setupToday(data){
+/* ---------------- TODAY + LIVE + END TIME ---------------- */
+function setupToday(){
 
     const todayStr=getTodayStr();
 
-    const s=data.find(x=>x["Date of the Seminar"]===todayStr);
+    const todaySeminar=seminars.find(s=>s["Date of the Seminar"]===todayStr);
 
     const box=document.getElementById("todaySeminar");
     const cd=document.getElementById("countdown");
 
-    if(!s){
+    if(!todaySeminar){
         box.innerText="No seminar today";
         cd.innerText="";
         return;
     }
 
-    box.innerHTML=`<b>${s["Seminar Name"]}</b><br>${s["Title of the Seminar"]}`;
+    box.innerHTML=`
+        <h3>${todaySeminar["Seminar Name"]}</h3>
+        <p>${todaySeminar["Title of the Seminar"]}</p>
+    `;
 
-    const target=s._date;
+    const start=todaySeminar._date;
+    const end=todaySeminar._end;
 
     if(countdownInterval) clearInterval(countdownInterval);
 
     countdownInterval=setInterval(()=>{
 
         const now=new Date();
-        const diff=target-now;
 
-        if(diff<=0){
-            cd.innerText="LIVE NOW";
-            clearInterval(countdownInterval);
-            return;
+        if(now < start){
+            const diff=start-now;
+            cd.innerText=`Starts in ${Math.floor(diff/60000)}m ${Math.floor(diff/1000)%60}s`;
         }
-
-        const h=Math.floor(diff/3600000)%24;
-        const m=Math.floor(diff/60000)%60;
-        const s2=Math.floor(diff/1000)%60;
-
-        cd.innerText=`${h}h ${m}m ${s2}s`;
+        else if(now >= start && now <= end){
+            const diff=end-now;
+            cd.innerText=`LIVE 🔴 Ends in ${Math.floor(diff/60000)}m ${Math.floor(diff/1000)%60}s`;
+        }
+        else{
+            cd.innerText="COMPLETED ✅";
+            clearInterval(countdownInterval);
+        }
 
     },1000);
 }
@@ -364,6 +352,7 @@ setInterval(()=>{
 
 /* ---------------- INIT ---------------- */
 loadData();
+setInterval(loadData,60000);
 
 </script>
 
