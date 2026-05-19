@@ -335,7 +335,22 @@ function generateDashboard(){
 
         };
 
-        upcomingContainer.appendChild(card);
+        // 1. Convert "DD/MM/YYYY" from the sheet into a valid Date object
+       const dateParts = seminar["Date of the Seminar"].split("/");
+        // JavaScript months are 0-indexed (January is 0, May is 4), so we subtract 1 from the month
+        const seminarDate = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
+        seminarDate.setHours(0, 0, 0, 0); // Reset time to midnight for accurate day comparison
+
+        // 2. Get today's date at midnight
+        const todayCompare = new Date();
+        todayCompare.setHours(0, 0, 0, 0);
+
+        // 3. Sort into Upcoming vs Previous based on the date
+        if (seminarDate < todayCompare) {
+            previousContainer.appendChild(card);
+        } else {
+            upcomingContainer.appendChild(card);
+        }
 
         // COUNTS
 
