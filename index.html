@@ -67,13 +67,79 @@ header p{margin-top:10px;color:#cbd5e1;font-size:18px;}
     color:#60a5fa;
 }
 
-/* TABLE STYLE LOG */
-.table-container{
+/* CARDS */
+.card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:20px;
+}
+
+.card{
     background:#111827;
     border:1px solid #1e293b;
     border-radius:14px;
+    padding:18px;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    border-color:#2563eb;
+}
+
+.card-type{
+    display:inline-block;
+    background:#1d4ed8;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.card-title{
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.card-info{
+    color:#cbd5e1;
+    font-size:14px;
+    margin:4px 0;
+}
+
+/* BUTTONS */
+.btn-group{
+    margin-top:12px;
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    flex:1;
+    text-align:center;
+    padding:8px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.ppt{
+    background:#2563eb;
+    color:white;
+}
+
+.teams{
+    background:#16a34a;
+    color:white;
+}
+
+/* TABLE */
+.table-container{
+    margin-top:40px;
+    background:#111827;
+    border-radius:12px;
     overflow:hidden;
-    margin-bottom:30px;
 }
 
 table{
@@ -81,29 +147,15 @@ table{
     border-collapse:collapse;
 }
 
-th, td{
-    padding:14px;
-    text-align:left;
+th,td{
+    padding:12px;
     border-bottom:1px solid #1e293b;
+    text-align:left;
 }
 
 th{
     background:#1e293b;
     color:#93c5fd;
-}
-
-tr:hover{
-    background:#0f172a;
-}
-
-.ppt-link{
-    color:#60a5fa;
-    text-decoration:none;
-    font-weight:bold;
-}
-
-.ppt-link:hover{
-    text-decoration:underline;
 }
 
 /* CLOCK */
@@ -132,8 +184,7 @@ footer{
 
     <!-- SEARCH -->
     <div class="search-box">
-        <input id="searchBox" type="text"
-        placeholder="Search by Title / Scholar Name / Reg ID...">
+        <input id="searchBox" placeholder="Search by Title / Scholar / Reg ID...">
     </div>
 
     <!-- LIVE -->
@@ -143,14 +194,13 @@ footer{
         <div class="countdown" id="countdown"></div>
     </div>
 
-    <h2 class="section-title">Seminar Log</h2>
+    <h2 class="section-title">Seminar Cards</h2>
+    <div class="card-grid" id="cardContainer"></div>
 
+    <h2 class="section-title">Seminar Log</h2>
     <div class="table-container">
         <table>
             <thead>
-                <tr>
-                    <th colspan="2">Title / PPT</th>
-                </tr>
                 <tr>
                     <th>ID</th>
                     <th>Scholar</th>
@@ -182,14 +232,12 @@ const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?forma
 
 let seminars = [];
 
-/* DATE PARSER */
 function parseDate(dateStr, timeStr="00:00"){
     const [dd,mm,yyyy] = dateStr.split("/").map(Number);
     const [hh,mi] = (timeStr || "00:00").split(":").map(Number);
     return new Date(yyyy, mm-1, dd, hh||0, mi||0);
 }
 
-/* FETCH DATA */
 async function loadData(){
     const res = await fetch(sheetURL + "&t=" + Date.now());
     const csv = await res.text();
@@ -223,10 +271,41 @@ async function loadData(){
         return obj;
     });
 
+    renderCards();
     renderTable();
 }
 
-/* TABLE RENDER */
+function renderCards(){
+
+    const container = document.getElementById("cardContainer");
+    container.innerHTML = "";
+
+    const sorted = [...seminars].sort((a,b)=>a._date-b._date);
+
+    sorted.forEach(s=>{
+
+        const ppt = s["PPT Shareable Link"]?.trim();
+        const teams = s["Microsoft Teams Link"]?.trim();
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <div class="card-type">${s["Seminar Name"]}</div>
+            <div class="card-title">${s["Title of the Seminar"]}</div>
+            <div class="card-info"><b>${s["Scholar Name"]}</b></div>
+            <div class="card-info">Reg ID: ${s["Scholar Reg. ID"] || ""}</div>
+
+            <div class="btn-group">
+                ${ppt ? `<a class="btn ppt" href="${ppt}" target="_blank">PPT</a>` : ""}
+                ${teams ? `<a class="btn teams" href="${teams}" target="_blank">Teams</a>` : ""}
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
 function renderTable(){
 
     const tbody = document.getElementById("logTable");
@@ -242,13 +321,9 @@ function renderTable(){
 
         row.innerHTML = `
             <td>${s.id}</td>
-            <td>${s["Scholar Name"] || ""}</td>
+            <td>${s["Scholar Name"]}</td>
             <td>${s["Supervisor Name"] || ""}</td>
-            <td>
-                ${ppt 
-                    ? `<a class="ppt-link" href="${ppt}" target="_blank">Open</a>` 
-                    : "N/A"}
-            </td>
+            <td>${ppt ? `<a href="${ppt}" target="_blank" style="color:#60a5fa">Open</a>` : "N/A"}</td>
         `;
 
         tbody.appendChild(row);
@@ -262,7 +337,6 @@ setInterval(()=>{
     document.getElementById("liveTime").innerText=n.toLocaleTimeString();
 },1000);
 
-/* INIT */
 loadData();
 setInterval(loadData,60000);
 
