@@ -6,123 +6,167 @@
   <title>Department Research Seminar Portal</title>
 
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f6f9;
-      color: #222;
-    }
 
-    header {
-      background-color: #1f3c88;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 32px;
+  }
+
+  header p {
+    margin-top: 8px;
+    color: #cbd5e1;
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 40px auto;
+    background-color: #111827;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.45);
+    border: 1px solid #1e293b;
+  }
+
+  .seminar-type {
+    display: inline-block;
+    background-color: #1d4ed8;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+
+  h1 {
+    margin-top: 10px;
+    color: #f8fafc;
+    font-size: 34px;
+    line-height: 1.4;
+  }
+
+  .section {
+    margin-top: 35px;
+  }
+
+  .section h2 {
+    border-bottom: 2px solid #334155;
+    padding-bottom: 10px;
+    color: #60a5fa;
+    font-size: 24px;
+  }
+
+  .info {
+    margin: 14px 0;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #dbeafe;
+  }
+
+  .info strong {
+    color: #93c5fd;
+  }
+
+  .button-group {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .btn {
+    text-decoration: none;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 15px 22px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(37,99,235,0.4);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+  }
+
+  .navigation {
+    margin-top: 45px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  .nav-btn {
+    text-decoration: none;
+    background-color: #1e293b;
+    padding: 13px 18px;
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-weight: bold;
+    transition: 0.3s;
+    border: 1px solid #334155;
+  }
+
+  .nav-btn:hover {
+    background-color: #334155;
+  }
+
+  footer {
+    text-align: center;
+    padding: 25px;
+    color: #94a3b8;
+    margin-top: 40px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 600px) {
 
     .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .seminar-type {
-      display: inline-block;
-      background-color: #e8eefc;
-      color: #1f3c88;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
+      margin: 15px;
+      padding: 22px;
     }
 
     h1 {
-      margin-top: 10px;
-      color: #1f3c88;
-    }
-
-    .section {
-      margin-top: 30px;
+      font-size: 26px;
     }
 
     .section h2 {
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 8px;
-      color: #1f3c88;
-    }
-
-    .info {
-      margin: 12px 0;
-      font-size: 17px;
-      line-height: 1.6;
+      font-size: 20px;
     }
 
     .button-group {
-      margin-top: 35px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
+      flex-direction: column;
     }
 
     .btn {
-      text-decoration: none;
-      background-color: #1f3c88;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background-color: #16306d;
+      text-align: center;
     }
 
     .navigation {
-      margin-top: 40px;
-      display: flex;
-      justify-content: space-between;
+      flex-direction: column;
     }
 
-    .nav-btn {
-      text-decoration: none;
-      background-color: #f0f0f0;
-      padding: 12px 18px;
-      border-radius: 8px;
-      color: #222;
-      font-weight: bold;
-    }
+  }
 
-    .nav-btn:hover {
-      background-color: #ddd;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #666;
-      margin-top: 30px;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 15px;
-        padding: 20px;
-      }
-
-      .button-group {
-        flex-direction: column;
-      }
-
-      .btn {
-        text-align: center;
-      }
-    }
-  </style>
+</style>
 </head>
 <body>
 
