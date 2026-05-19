@@ -36,32 +36,6 @@ header p{margin-top:10px;color:#cbd5e1;font-size:18px;}
     color:#60a5fa;
 }
 
-/* SEARCH + FILTER */
-.top-controls{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-}
-
-input{
-    flex:1;
-    padding:10px;
-    border-radius:8px;
-    border:none;
-}
-
-button{
-    padding:10px 14px;
-    border-radius:8px;
-    border:none;
-    cursor:pointer;
-    background:#1d4ed8;
-    color:white;
-}
-
-button:hover{background:#2563eb;}
-
 .card-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -155,15 +129,6 @@ footer{
         <div class="countdown" id="countdown"></div>
     </div>
 
-    <!-- SEARCH + FILTER -->
-    <div class="top-controls">
-        <input id="searchBox" placeholder="Search seminars...">
-        <button onclick="filterType='ALL';generateUI()">All</button>
-        <button onclick="filterType='Thesis';generateUI()">Thesis</button>
-        <button onclick="filterType='Colloquium';generateUI()">Colloquium</button>
-        <button onclick="filterType='Research Seminar';generateUI()">Research</button>
-    </div>
-
     <h2 class="section-title">Upcoming Seminars</h2>
     <div class="card-grid" id="upcomingContainer"></div>
 
@@ -200,7 +165,6 @@ const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?forma
 /* ---------------- STATE ---------------- */
 let seminars = [];
 let countdownInterval = null;
-let filterType = "ALL";
 
 /* ---------------- DATE ---------------- */
 function parseDate(dateStr, timeStr="00:00"){
@@ -210,6 +174,14 @@ function parseDate(dateStr, timeStr="00:00"){
     const [hh,mi] = (timeStr || "00:00").split(":").map(Number);
 
     return new Date(yyyy, mm-1, dd, hh||0, mi||0);
+}
+
+/* ---------------- TODAY ---------------- */
+function getTodayStr(){
+    const d = new Date();
+    return String(d.getDate()).padStart(2,"0") + "/" +
+           String(d.getMonth()+1).padStart(2,"0") + "/" +
+           d.getFullYear();
 }
 
 /* ---------------- FETCH ---------------- */
@@ -260,7 +232,7 @@ function generateUI(){
 
     let t=0,th=0,co=0,re=0;
 
-    const search = document.getElementById("searchBox").value.toLowerCase();
+    const search = "";
 
     const sorted=[...seminars].sort((a,b)=>a._date-b._date);
 
@@ -268,26 +240,19 @@ function generateUI(){
 
     sorted.forEach(s=>{
 
-        const matchFilter = filterType==="ALL" || s["Seminar Name"]===filterType;
-
-        const matchSearch =
-            (s["Title of the Seminar"]||"").toLowerCase().includes(search) ||
-            (s["Scholar Name"]||"").toLowerCase().includes(search);
-
-        if(!matchFilter || !matchSearch) return;
-
         const card=document.createElement("div");
         card.className="card";
 
         card.innerHTML=`
             <div class="card-type">${s["Seminar Name"]}</div>
             <div class="card-title">${s["Title of the Seminar"]}</div>
-            <div class="card-info">${s["Scholar Name"]}</div>
+            <div class="card-info"><b>${s["Scholar Name"]}</b></div>
+            <div class="card-info">Reg. ID: ${s["Scholar Reg. ID"] || "N/A"}</div>
             <div class="card-info">${s["Date of the Seminar"]}</div>
         `;
 
-        /* ✅ FIXED CLICK (bulletproof) */
-        card.addEventListener("click", function(){
+        /* CLICK FIX */
+        card.addEventListener("click", ()=>{
             window.location.href = "seminar.html?id=" + encodeURIComponent(s.id);
         });
 
@@ -365,8 +330,6 @@ setInterval(()=>{
 /* ---------------- INIT ---------------- */
 loadData();
 setInterval(loadData,60000);
-
-document.getElementById("searchBox").addEventListener("input",generateUI);
 
 </script>
 
