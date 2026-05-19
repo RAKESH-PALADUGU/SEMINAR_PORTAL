@@ -256,9 +256,16 @@ Department Research Seminar Management System
 
 <script>
 
-const sheetURL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
+//const sheetURL =
+//"https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
 
+// Paste your real spreadsheet ID inside the quotes below:
+const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU"; 
+const gid = "1424736644";
+
+const sheetURL = "https://docs.google.com/spreadsheets/d/" + sheetID + "/gviz/tq?tqx=out:csv&gid=" + gid;
+
+    
 let seminars = [];
 
 // Append a unique timestamp to the URL so it never uses a cached copy
