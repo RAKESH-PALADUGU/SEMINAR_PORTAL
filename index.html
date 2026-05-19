@@ -398,12 +398,77 @@ if(todaysSeminar){
     </p>
 
     `;
+    // =========================================
+// COUNTDOWN TIMER
+// =========================================
+
+const seminarDate =
+todaysSeminar["Date of the Seminar"];
+
+const seminarTime =
+todaysSeminar["Time of the Seminar"];
+
+// CONVERT DD/MM/YYYY
+
+const parts = seminarDate.split("/");
+
+const formattedDate =
+`${parts[2]}-${parts[1]}-${parts[0]}`;
+
+// CREATE TARGET TIME
+
+const targetDateTime =
+new Date(`${formattedDate} ${seminarTime}`);
+
+// UPDATE COUNTDOWN
+
+function updateCountdown(){
+
+    const now = new Date();
+
+    const difference =
+    targetDateTime - now;
+
+    if(difference <= 0){
+
+        document.getElementById("countdown")
+        .innerText = "LIVE NOW";
+
+        return;
+    }
+
+    const days =
+    Math.floor(difference / (1000*60*60*24));
+
+    const hours =
+    Math.floor((difference % (1000*60*60*24))
+    / (1000*60*60));
+
+    const minutes =
+    Math.floor((difference % (1000*60*60))
+    / (1000*60));
+
+    const seconds =
+    Math.floor((difference % (1000*60))
+    / 1000);
+
+    document.getElementById("countdown")
+    .innerText =
+    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+}
+
+setInterval(updateCountdown,1000);
+
+updateCountdown();
 
 }else{
 
     document.getElementById("todaySeminar")
     .innerHTML =
     "No seminar scheduled for today.";
+    document.getElementById("countdown")
+.innerText = "";
 
 }
 
