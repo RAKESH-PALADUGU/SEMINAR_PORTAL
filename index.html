@@ -367,25 +367,45 @@ function generateDashboard(){
 
     // TODAY'S SEMINAR
 
-    const latest =
-    seminars[seminars.length - 1];
+    const today = new Date();
+
+const todayFormatted =
+today.toLocaleDateString("en-GB");
+
+const todaysSeminar =
+seminars.find(seminar => {
+
+    return seminar["Date of the Seminar"]
+    === todayFormatted;
+
+});
+
+if(todaysSeminar){
 
     document.getElementById("todaySeminar")
     .innerHTML = `
 
     <h2>
-    ${latest["Seminar Name"]}
+    ${todaysSeminar["Seminar Name"]}
     </h2>
 
     <h3>
-    ${latest["Title of the Seminar"]}
+    ${todaysSeminar["Title of the Seminar"]}
     </h3>
 
     <p>
-    by ${latest["Scholar Name"]}
+    by ${todaysSeminar["Scholar Name"]}
     </p>
 
     `;
+
+}else{
+
+    document.getElementById("todaySeminar")
+    .innerHTML =
+    "No seminar scheduled for today.";
+
+}
 
 }
 
