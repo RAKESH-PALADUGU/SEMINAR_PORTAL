@@ -261,7 +261,8 @@ const sheetURL =
 
 let seminars = [];
 
-fetch(sheetURL)
+// Append a unique timestamp to the URL so it never uses a cached copy
+fetch(sheetURL + "&t=" + Date.now())
 .then(response => response.text())
 .then(csvText => {
 
