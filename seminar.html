@@ -317,6 +317,21 @@ fetch(sheetURL)
 
     currentIndex = seminars.length - 1;
 
+    const params =
+new URLSearchParams(window.location.search);
+
+const seminarId =
+params.get("id");
+
+if(seminarId !== null){
+
+    currentIndex = parseInt(seminarId);
+
+}else{
+
+    currentIndex = seminars.length - 1;
+
+}
     loadSeminar(currentIndex);
 
   })
