@@ -7,7 +7,6 @@
 <title>Department Research Seminar Portal</title>
 
 <style>
-
 body{
     margin:0;
     padding:0;
@@ -140,170 +139,132 @@ footer{
 }
 
 @media(max-width:700px){
-
     header h1{
         font-size:28px;
     }
-
     .section-title{
         font-size:24px;
     }
-
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-
-<h1>
-Department of Mechanical Engineering
-</h1>
-
-<p>
-Department Research Seminar Portal
-</p>
-
+    <h1>Department of Mechanical Engineering</h1>
+    <p>Department Research Seminar Portal</p>
 </header>
 
 <div class="container">
 
-<!-- TODAY SECTION -->
+    <div class="live-box">
+        <div class="live-title">Today's Seminar</div>
+        <div id="todaySeminar">Loading...</div>
+        <div class="countdown" id="countdown">Loading countdown...</div>
+    </div>
 
-<div class="live-box">
+    <h2 class="section-title">Upcoming Seminars</h2>
+    <div class="card-grid" id="upcomingContainer"></div>
 
-<div class="live-title">
-Today's Seminar
-</div>
+    <h2 class="section-title" style="margin-top:50px;">Previous Seminars</h2>
+    <div class="card-grid" id="previousContainer"></div>
 
-<div id="todaySeminar">
-Loading...
-</div>
+    <h2 class="section-title" style="margin-top:50px;">Department Statistics</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div>Total Seminars</div>
+            <div class="stat-number" id="totalSeminars">0</div>
+        </div>
+        <div class="stat-card">
+            <div>Thesis</div>
+            <div class="stat-number" id="thesisCount">0</div>
+        </div>
+        <div class="stat-card">
+            <div>Colloquium</div>
+            <div class="stat-number" id="colloquiumCount">0</div>
+        </div>
+        <div class="stat-card">
+            <div>Research Seminars</div>
+            <div class="stat-number" id="researchCount">0</div>
+        </div>
+    </div>
 
-<div class="countdown" id="countdown">
-Loading countdown...
-</div>
-
-</div>
-
-<!-- UPCOMING -->
-
-<h2 class="section-title">
-Upcoming Seminars
-</h2>
-
-<div class="card-grid" id="upcomingContainer">
-
-</div>
-
-<!-- PREVIOUS -->
-
-<h2 class="section-title" style="margin-top:50px;">
-Previous Seminars
-</h2>
-
-<div class="card-grid" id="previousContainer">
-
-</div>
-
-<!-- STATISTICS -->
-
-<h2 class="section-title" style="margin-top:50px;">
-Department Statistics
-</h2>
-
-<div class="stats-grid">
-
-<div class="stat-card">
-<div>Total Seminars</div>
-<div class="stat-number" id="totalSeminars">0</div>
-</div>
-
-<div class="stat-card">
-<div>Thesis</div>
-<div class="stat-number" id="thesisCount">0</div>
-</div>
-
-<div class="stat-card">
-<div>Colloquium</div>
-<div class="stat-number" id="colloquiumCount">0</div>
-</div>
-
-<div class="stat-card">
-<div>Research Seminars</div>
-<div class="stat-number" id="researchCount">0</div>
-</div>
-
-</div>
-
-<!-- CLOCK -->
-
-<div class="clock">
-
-<div id="liveDate"></div>
-
-<div id="liveTime"></div>
-
-</div>
+    <div class="clock">
+        <div id="liveDate"></div>
+        <div id="liveTime"></div>
+    </div>
 
 </div>
 
 <footer>
-Department Research Seminar Management System
+    Department Research Seminar Management System
 </footer>
 
 <script>
-
-const sheetURL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vSvIa0ZvDl7V8PYBHrIhlbIhzdblx8ErY_2AhjXWLRPNYRY1oQ7U4cHgZKm95Bzy_06yNVFandfgiHT/pub?gid=1424736644&single=true&output=csv";
-/*
-// 1. Keep your correct IDs
+// Target spreadsheet configuration
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 const gid = "1424736644";
-
-// 2. Use the direct export endpoint instead of gviz (fixes the delay AND the UI issue)
 const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
 
 let seminars = [];
 
-// Append a unique timestamp to force Google to give you the absolute latest data instantly
+// Fetch data directly from spreadsheet export engine
 fetch(sheetURL + "&t=" + Date.now())
   .then(response => {
     if (!response.ok) throw new Error("Network response was not ok");
     return response.text();
   })
   .then(csvText => {
-    // Split rows safely handling potential carriage returns (\r)
-    const rows = csvText.split(/\r?\n/).map(row => row.split(","));
-    const headers = rows[0];
-    
-    seminars = []; // Clear array to prevent duplicates
-    for (let i = 1; i < rows.length; i++) {
-      if (!rows[i] || rows[i].length <= 1) continue; // Skip empty rows
+    // Robust RFC 4180 compliant parsing to keep commas inside quotes from splitting
+    const parseCSVRow = (text) => {
+      const result = [];
+      let startValueIdx = 0;
+      let inQuotes = false;
       
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === '"') {
+          inQuotes = !inQuotes;
+        } else if (text[i] === ',' && !inQuotes) {
+          result.push(text.substring(startValueIdx, i));
+          startValueIdx = i + 1;
+        }
+      }
+      result.push(text.substring(startValueIdx));
+      return result.map(val => val.replace(/^"|"$/g, "").replace(/""/g, '"').trim());
+    };
+
+    const lines = csvText.split(/\r?\n/);
+    if (lines.length === 0 || lines[0].trim() === "") return;
+
+    const headers = parseCSVRow(lines[0]);
+    seminars = []; 
+
+    for (let i = 1; i < lines.length; i++) {
+      if (!lines[i].trim()) continue;
+      
+      const currentValues = parseCSVRow(lines[i]);
       let rowData = {};
+      
       headers.forEach((header, index) => {
-        let cleanHeader = header.replace(/"/g, "").trim();
-        let cleanValue = rows[i][index] ? rows[i][index].replace(/"/g, "").trim() : "";
-        rowData[cleanHeader] = cleanValue;
+        rowData[header] = currentValues[index] || "";
       });
+      
       seminars.push(rowData);
-    }*/
-    // Only generate dashboard once data is fully ready
+    }
+
+    // Initialize UI only after tracking completes successfully
     generateDashboard();
   })
   .catch(err => {
     console.error("Error fetching seminar data:", err);
-    document.getElementById("todaySeminar").innerText = "Error loading data. Check spreadsheet access permissions.";
+    document.getElementById("todaySeminar").innerText = "Error loading data. Verify spreadsheet access permissions.";
   });
 
 function generateDashboard(){
     const upcomingContainer = document.getElementById("upcomingContainer");
     const previousContainer = document.getElementById("previousContainer");
 
-    // Clear old container data to prevent appending duplicates on refresh
     upcomingContainer.innerHTML = "";
     previousContainer.innerHTML = "";
 
@@ -312,7 +273,6 @@ function generateDashboard(){
     let researchCount = 0;
 
     seminars.forEach((seminar, index) => {
-        // Skip malformed entries safely
         if(!seminar["Date of the Seminar"] || !seminar["Seminar Name"]) return;
 
         const card = document.createElement("div");
@@ -328,23 +288,21 @@ function generateDashboard(){
             window.location.href = "seminar.html?id=" + index;
         };
 
-        // 1. Convert "DD/MM/YYYY" from the sheet into a valid Date object
+        // Parse DD/MM/YYYY dates
         const dateParts = seminar["Date of the Seminar"].split("/");
         const seminarDate = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
         seminarDate.setHours(0, 0, 0, 0); 
 
-        // 2. Get today's date at midnight
         const todayCompare = new Date();
         todayCompare.setHours(0, 0, 0, 0);
 
-        // 3. Sort into Upcoming vs Previous based on the date
         if (seminarDate < todayCompare) {
             previousContainer.appendChild(card);
         } else {
             upcomingContainer.appendChild(card);
         }
 
-        // COUNTS
+        // Compute metrics
         if(seminar["Seminar Name"] === "Thesis"){
             thesisCount++;
         }
@@ -361,9 +319,9 @@ function generateDashboard(){
     document.getElementById("colloquiumCount").innerText = colloquiumCount;
     document.getElementById("researchCount").innerText = researchCount;
 
-    // TODAY'S SEMINAR
+    // Evaluate Today's Seminars
     const today = new Date();
-    const todayFormatted = today.toLocaleDateString("en-GB");
+    const todayFormatted = today.toLocaleDateString("en-GB"); // Format as DD/MM/YYYY
 
     const todaysSeminar = seminars.find(seminar => {
         return seminar["Date of the Seminar"] === todayFormatted;
@@ -376,7 +334,6 @@ function generateDashboard(){
             <p>by ${todaysSeminar["Scholar Name"]}</p>
         `;
 
-        // COUNTDOWN TIMER
         const seminarDate = todaysSeminar["Date of the Seminar"];
         const seminarTime = todaysSeminar["Time of the Seminar"];
         const parts = seminarDate.split("/");
@@ -408,7 +365,7 @@ function generateDashboard(){
     }
 }
 
-// LIVE CLOCK
+// System live-clocks
 function updateClock(){
     const now = new Date();
     document.getElementById("liveDate").innerText = now.toLocaleDateString();
@@ -416,6 +373,7 @@ function updateClock(){
 }
 setInterval(updateClock, 1000);
 updateClock();
+</script>
 
 </body>
 </html>
