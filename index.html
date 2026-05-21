@@ -274,11 +274,12 @@ footer{
 
             <thead>
                 <tr>
+                    <th>Date of Seminar</th>
+                    <th>Time of Seminar</th>
                     <th>Reg. ID</th>
                     <th>Scholar Name</th>
                     <th>Supervisor Name</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th>Seminar Name</th>
                 </tr>
             </thead>
 
@@ -602,41 +603,35 @@ function renderSection(data,container){
 
 /* ================= TABLE ================= */
 
-function renderTable(){
+<script>
 
-    const tbody =
-    document.getElementById("logTable");
+/* ---------------- LOG TABLE ---------------- */
+function renderLogTable(){
 
+    const tbody = document.getElementById("logTable");
     tbody.innerHTML = "";
 
-    const sorted =
-    [...seminars]
-    .sort((a,b)=>b._date-a._date);
+    // SORT BY DATE + TIME
+    const sorted = [...seminars].sort((a,b)=>a._date - b._date);
 
     sorted.forEach(s=>{
 
-        const row =
-        document.createElement("tr");
+        const row = document.createElement("tr");
 
         row.innerHTML = `
-
-            <td>${s["Scholar Reg. ID"] || ""}</td>
-
-            <td>${s["Scholar Name"] || ""}</td>
-
-            <td>${s["Supervisor Name"] || ""}</td>
-
-            <td>${s["Date of the Seminar"] || ""}</td>
-
-            <td>${s["Time of the Seminar"] || ""}</td>
-
+            <td>${s["Date of the Seminar"] || "-"}</td>
+            <td>${s["Time of the Seminar"] || "-"}</td>
+            <td>${s["Scholar Reg. ID"] || "-"}</td>
+            <td>${s["Scholar Name"] || "-"}</td>
+            <td>${s["Supervisor Name"] || "-"}</td>
+            <td>${s["Seminar Name"] || "-"}</td>
         `;
 
         tbody.appendChild(row);
-
     });
-
 }
+
+</script>
 
 /* ================= TODAY ================= */
 
