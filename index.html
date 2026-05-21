@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Department Seminar Portal</title>
 
 <style>
@@ -29,7 +30,6 @@ header h1{
 header p{
     margin-top:10px;
     color:#cbd5e1;
-    font-size:18px;
 }
 
 .container{
@@ -56,17 +56,13 @@ header p{
     outline:none;
 }
 
-/* LIVE BOX */
+/* TODAY BOX */
 
 .live-box{
     background:linear-gradient(135deg,#1e3a8a,#2563eb);
     padding:25px;
     border-radius:16px;
     margin-bottom:40px;
-}
-
-.live-box h2{
-    margin-top:0;
 }
 
 .countdown{
@@ -126,19 +122,18 @@ header p{
     font-size:14px;
 }
 
-/* SMALL CARD */
+/* MORE CARD */
 
 .more-card{
     display:flex;
     justify-content:center;
     align-items:center;
-    text-align:center;
     background:#1e293b;
     border:2px dashed #334155;
     border-radius:14px;
     min-height:180px;
     color:#93c5fd;
-    font-size:20px;
+    font-size:22px;
     font-weight:bold;
 }
 
@@ -157,8 +152,8 @@ header p{
     border-radius:8px;
     text-decoration:none;
     color:white;
-    font-weight:bold;
     font-size:13px;
+    font-weight:bold;
 }
 
 .ppt{
@@ -194,7 +189,6 @@ th{
 td{
     padding:14px;
     border-bottom:1px solid #1e293b;
-    color:#e2e8f0;
 }
 
 /* CLOCK */
@@ -240,16 +234,25 @@ footer{
     <!-- SEARCH -->
 
     <div class="search-box">
-        <input type="text" id="searchBox"
-        placeholder="Search by Title / Scholar / Reg ID...">
+        <input
+        type="text"
+        id="searchBox"
+        placeholder="Search by Title / Scholar / Reg ID..."
+        >
     </div>
 
-    <!-- LIVE -->
+    <!-- TODAY -->
 
     <div class="live-box">
+
         <h2>Today's Seminar</h2>
-        <div id="todaySeminar">Loading...</div>
+
+        <div id="todaySeminar">
+            Loading...
+        </div>
+
         <div class="countdown" id="countdown"></div>
+
     </div>
 
     <!-- UPCOMING -->
@@ -309,6 +312,7 @@ VFSTR, Vadlamudi
 /* ================= CONFIG ================= */
 
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
+
 const gid = "1424736644";
 
 const sheetURL =
@@ -330,7 +334,8 @@ function parseDate(dateStr,timeStr="00:00"){
 
     if(!dateStr) return new Date(0);
 
-    const [dd,mm,yyyy] = dateStr.split("/").map(Number);
+    const [dd,mm,yyyy] =
+    dateStr.split("/").map(Number);
 
     const [hh,mi] =
     (timeStr || "00:00").split(":").map(Number);
@@ -366,7 +371,7 @@ function parseRow(text){
 
     out.push(cur);
 
-    return out.map(v=>
+    return out.map(v =>
         v.replace(/^"|"$/g,'').trim()
     );
 
@@ -386,7 +391,7 @@ async function loadData(){
     const headers = parseRow(lines[0]);
 
     seminars = lines.slice(1)
-    .filter(l=>l.trim())
+    .filter(l => l.trim())
     .map((l,i)=>{
 
         const vals = parseRow(l);
@@ -425,7 +430,7 @@ function renderUI(){
 
     renderCards();
 
-    renderTable();
+    renderLogTable();
 
     setupToday();
 
@@ -433,7 +438,8 @@ function renderUI(){
 
 /* ================= SEARCH ================= */
 
-document.getElementById("searchBox")
+document
+.getElementById("searchBox")
 .addEventListener("input",renderCards);
 
 /* ================= CARDS ================= */
@@ -509,8 +515,6 @@ function renderSection(data,container){
 
         card.className = "card";
 
-        /* OPEN SEMINAR PAGE */
-
         card.onclick = ()=>{
 
             window.location.href =
@@ -580,8 +584,6 @@ function renderSection(data,container){
 
     });
 
-    /* REMAINING CARD */
-
     if(data.length > MAX_VISIBLE_CARDS){
 
         const remain =
@@ -601,37 +603,45 @@ function renderSection(data,container){
 
 }
 
-/* ================= TABLE ================= */
+/* ================= LOG TABLE ================= */
 
-<script>
-
-/* ---------------- LOG TABLE ---------------- */
 function renderLogTable(){
 
-    const tbody = document.getElementById("logTable");
+    const tbody =
+    document.getElementById("logTable");
+
     tbody.innerHTML = "";
 
-    // SORT BY DATE + TIME
-    const sorted = [...seminars].sort((a,b)=>a._date - b._date);
+    const sorted =
+    [...seminars]
+    .sort((a,b)=>a._date-b._date);
 
     sorted.forEach(s=>{
 
-        const row = document.createElement("tr");
+        const row =
+        document.createElement("tr");
 
         row.innerHTML = `
+
             <td>${s["Date of the Seminar"] || "-"}</td>
+
             <td>${s["Time of the Seminar"] || "-"}</td>
+
             <td>${s["Scholar Reg. ID"] || "-"}</td>
+
             <td>${s["Scholar Name"] || "-"}</td>
+
             <td>${s["Supervisor Name"] || "-"}</td>
+
             <td>${s["Seminar Name"] || "-"}</td>
+
         `;
 
         tbody.appendChild(row);
-    });
-}
 
-</script>
+    });
+
+}
 
 /* ================= TODAY ================= */
 
@@ -646,7 +656,7 @@ function setupToday(){
     const now = new Date();
 
     const active =
-    seminars.find(s=>
+    seminars.find(s =>
         now >= s._date &&
         now <= s._end
     );
@@ -654,8 +664,8 @@ function setupToday(){
     if(active){
 
         box.innerHTML = `
-            <h3>${active["Title of the Seminar"]}</h3>
-            <div>${active["Scholar Name"]}</div>
+            <h2>${active["Title of the Seminar"]}</h2>
+            <p>${active["Scholar Name"]}</p>
         `;
 
         clearInterval(countdownInterval);
@@ -691,11 +701,9 @@ function setupToday(){
 
     }
 
-    /* NEXT SEMINAR */
-
     const upcoming =
     seminars
-    .filter(s=>s._date > now)
+    .filter(s => s._date > now)
     .sort((a,b)=>a._date-b._date)[0];
 
     if(!upcoming){
@@ -710,8 +718,8 @@ function setupToday(){
     }
 
     box.innerHTML = `
-        <h3>${upcoming["Title of the Seminar"]}</h3>
-        <div>${upcoming["Scholar Name"]}</div>
+        <h2>${upcoming["Title of the Seminar"]}</h2>
+        <p>${upcoming["Scholar Name"]}</p>
     `;
 
     clearInterval(countdownInterval);
