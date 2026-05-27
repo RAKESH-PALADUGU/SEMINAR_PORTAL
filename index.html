@@ -84,7 +84,7 @@ header p{
     margin-bottom:20px;
 }
 
-/* CARD LAYOUT */
+/* CARD GRID */
 
 .card-grid{
     display:grid;
@@ -92,19 +92,13 @@ header p{
     align-items:stretch;
 }
 
-/* 1 CARD */
-
 .card-grid.one-card{
     grid-template-columns:1fr;
 }
 
-/* 2 CARDS */
-
 .card-grid.two-cards{
     grid-template-columns:1fr 1fr;
 }
-
-/* 3+ CARDS */
 
 .card-grid.multi-cards{
     grid-template-columns:
@@ -205,7 +199,12 @@ td{
     color:#e2e8f0;
 }
 
-/* BUTTONS */
+tr:hover{
+    background:#1e293b;
+    cursor:pointer;
+}
+
+/* BUTTON */
 
 .log-btn-wrap{
     margin-top:18px;
@@ -232,7 +231,7 @@ td{
 .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.8);
+    background:rgba(0,0,0,0.85);
     display:none;
     justify-content:center;
     align-items:flex-start;
@@ -243,7 +242,7 @@ td{
 
 .modal-content{
     width:100%;
-    max-width:1100px;
+    max-width:1200px;
     background:#111827;
     border-radius:16px;
     padding:25px;
@@ -251,7 +250,7 @@ td{
 
 .modal-close{
     float:right;
-    font-size:28px;
+    font-size:30px;
     cursor:pointer;
     color:white;
 }
@@ -262,11 +261,27 @@ td{
     color:#60a5fa;
 }
 
-.modal-item{
+/* MODAL SEMINAR LIST */
+
+.modal-list{
+    display:grid;
+    gap:18px;
+}
+
+.modal-card{
     background:#1e293b;
-    padding:18px;
-    border-radius:12px;
-    margin-bottom:15px;
+    border-radius:14px;
+    padding:20px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.modal-card:hover{
+    background:#334155;
+}
+
+.modal-card .card-title{
+    font-size:20px;
 }
 
 /* CLOCK */
@@ -358,12 +373,12 @@ footer{
 
             <thead>
                 <tr>
-                    <th>Date of Seminar</th>
-                    <th>Time of Seminar</th>
+                    <th>Date</th>
+                    <th>Time</th>
                     <th>Reg. ID</th>
                     <th>Scholar Name</th>
-                    <th>Supervisor Name</th>
-                    <th>Seminar Name</th>
+                    <th>Supervisor</th>
+                    <th>Seminar</th>
                 </tr>
             </thead>
 
@@ -397,9 +412,11 @@ footer{
         <span class="modal-close"
         onclick="closeModal()">&times;</span>
 
-        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-title"
+        id="modalTitle"></div>
 
-        <div id="modalList"></div>
+        <div class="modal-list"
+        id="modalList"></div>
 
     </div>
 
@@ -415,7 +432,8 @@ VFSTR, Vadlamudi
 
 /* ================= CONFIG ================= */
 
-const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
+const sheetID =
+"1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 
 const gid = "1424736644";
 
@@ -555,6 +573,26 @@ function renderUI(){
 document.getElementById("searchBox")
 .addEventListener("input",renderCards);
 
+/* ================= GRID ================= */
+
+function setGridClass(container,count){
+
+    container.className = "card-grid";
+
+    if(count === 1){
+        container.classList.add("one-card");
+    }
+
+    else if(count === 2){
+        container.classList.add("two-cards");
+    }
+
+    else{
+        container.classList.add("multi-cards");
+    }
+
+}
+
 /* ================= CARDS ================= */
 
 function renderCards(){
@@ -617,26 +655,6 @@ function renderCards(){
 
 }
 
-/* ================= GRID CLASS ================= */
-
-function setGridClass(container,count){
-
-    container.className = "card-grid";
-
-    if(count === 1){
-        container.classList.add("one-card");
-    }
-
-    else if(count === 2){
-        container.classList.add("two-cards");
-    }
-
-    else{
-        container.classList.add("multi-cards");
-    }
-
-}
-
 /* ================= SECTION ================= */
 
 function renderSection(data,container,title){
@@ -649,52 +667,11 @@ function renderSection(data,container,title){
     visible.forEach(s=>{
 
         const card =
-        document.createElement("div");
-
-        card.className = "card";
-
-        card.onclick = ()=>{
-
-            window.location.href =
-            "seminar.html?id=" +
-            encodeURIComponent(s.id);
-
-        };
-
-        card.innerHTML = `
-
-            <div>
-
-                <div class="card-type">
-                    ${s["Seminar Name"]}
-                </div>
-
-                <div class="card-title">
-                    ${s["Title of the Seminar"]}
-                </div>
-
-                <div class="card-info">
-                    <b>${s["Scholar Name"]}</b>
-                </div>
-
-                <div class="card-info">
-                    Reg. ID:
-                    ${s["Scholar Reg. ID"] || "N/A"}
-                </div>
-
-            </div>
-
-            <div class="card-info">
-                ${s["Date of the Seminar"]}
-            </div>
-
-        `;
+        createSeminarCard(s);
 
         container.appendChild(card);
 
     });
-
-    /* MORE CARD ONLY IF > 3 */
 
     if(data.length > MAX_VISIBLE_CARDS){
 
@@ -721,6 +698,58 @@ function renderSection(data,container,title){
 
 }
 
+/* ================= CARD TEMPLATE ================= */
+
+function createSeminarCard(s){
+
+    const card =
+    document.createElement("div");
+
+    card.className = "card";
+
+    card.onclick = ()=>{
+
+        window.location.href =
+        "seminar.html?id=" +
+        encodeURIComponent(s.id);
+
+    };
+
+    card.innerHTML = `
+
+        <div>
+
+            <div class="card-type">
+                ${s["Seminar Name"]}
+            </div>
+
+            <div class="card-title">
+                ${s["Title of the Seminar"]}
+            </div>
+
+            <div class="card-info">
+                <b>${s["Scholar Name"]}</b>
+            </div>
+
+            <div class="card-info">
+                Reg. ID:
+                ${s["Scholar Reg. ID"] || "N/A"}
+            </div>
+
+        </div>
+
+        <div class="card-info">
+            ${s["Date of the Seminar"]}
+            |
+            ${s["Time of the Seminar"]}
+        </div>
+
+    `;
+
+    return card;
+
+}
+
 /* ================= MODAL ================= */
 
 function openModal(title,data){
@@ -738,38 +767,12 @@ function openModal(title,data){
 
     data.forEach(s=>{
 
-        const item =
-        document.createElement("div");
+        const card =
+        createSeminarCard(s);
 
-        item.className = "modal-item";
+        card.classList.add("modal-card");
 
-        item.innerHTML = `
-
-            <h3>
-                ${s["Title of the Seminar"]}
-            </h3>
-
-            <p>
-                <b>${s["Scholar Name"]}</b>
-            </p>
-
-            <p>
-                ${s["Date of the Seminar"]}
-                |
-                ${s["Time of the Seminar"]}
-            </p>
-
-        `;
-
-        item.onclick = ()=>{
-
-            window.location.href =
-            "seminar.html?id=" +
-            encodeURIComponent(s.id);
-
-        };
-
-        list.appendChild(item);
+        list.appendChild(card);
 
     });
 
@@ -791,8 +794,6 @@ function renderLogTable(){
 
     tbody.innerHTML = "";
 
-    /* LATEST FIRST */
-
     const sorted =
     [...seminars]
     .sort((a,b)=>b._date-a._date);
@@ -806,6 +807,14 @@ function renderLogTable(){
 
         const row =
         document.createElement("tr");
+
+        row.onclick = ()=>{
+
+            window.location.href =
+            "seminar.html?id=" +
+            encodeURIComponent(s.id);
+
+        };
 
         row.innerHTML = `
 
@@ -839,11 +848,14 @@ function renderLogTable(){
 
     });
 
+    const remaining =
+    sorted.length - INITIAL_LOGS;
+
     document.getElementById("toggleLogsBtn")
     .innerText =
     showAllLogs
     ? "Show Less"
-    : "View Full Log";
+    : `View ${remaining > 0 ? remaining : ""} More Logs`;
 
 }
 
@@ -923,8 +935,6 @@ function setupToday(){
         return;
 
     }
-
-    /* NEXT */
 
     const upcoming =
     seminars
