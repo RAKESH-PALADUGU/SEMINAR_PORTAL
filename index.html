@@ -15,8 +15,6 @@ body{
     color:white;
 }
 
-/* HEADER */
-
 header{
     background:linear-gradient(135deg,#1e3a8a,#2563eb);
     padding:35px 20px;
@@ -25,16 +23,13 @@ header{
 
 header h1{
     margin:0;
-    font-size:42px;
+    font-size:38px;
 }
 
 header p{
     margin-top:10px;
-    color:#dbeafe;
-    font-size:18px;
+    color:#cbd5e1;
 }
-
-/* CONTAINER */
 
 .container{
     width:92%;
@@ -60,24 +55,19 @@ header p{
     outline:none;
 }
 
-/* LIVE BOX */
+/* TODAY */
 
 .live-box{
     background:linear-gradient(135deg,#1e3a8a,#2563eb);
-    padding:28px;
-    border-radius:18px;
+    padding:25px;
+    border-radius:16px;
     margin-bottom:40px;
-}
-
-.live-box h2{
-    margin-top:0;
 }
 
 .countdown{
     margin-top:10px;
     color:#facc15;
     font-size:22px;
-    font-weight:bold;
 }
 
 /* SECTION */
@@ -85,7 +75,7 @@ header p{
 .section-title{
     font-size:30px;
     color:#60a5fa;
-    margin-top:45px;
+    margin-top:40px;
     margin-bottom:20px;
 }
 
@@ -93,9 +83,24 @@ header p{
 
 .card-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:22px;
+    gap:20px;
     align-items:stretch;
+}
+
+.card-grid.one{
+    grid-template-columns:1fr;
+}
+
+.card-grid.two{
+    grid-template-columns:1fr 1fr;
+}
+
+.card-grid.three{
+    grid-template-columns:1fr 1fr 1fr;
+}
+
+.card-grid.more{
+    grid-template-columns:1fr 1fr 0.24fr;
 }
 
 /* CARD */
@@ -103,8 +108,8 @@ header p{
 .card{
     background:#111827;
     border:1px solid #1e293b;
-    border-radius:16px;
-    padding:22px;
+    border-radius:14px;
+    padding:20px;
     transition:0.3s;
     cursor:pointer;
     min-height:180px;
@@ -119,16 +124,15 @@ header p{
 .card-type{
     display:inline-block;
     background:#2563eb;
-    padding:6px 12px;
+    padding:5px 12px;
     border-radius:20px;
     font-size:12px;
     margin-bottom:15px;
 }
 
 .card-title{
-    font-size:21px;
+    font-size:22px;
     margin-bottom:12px;
-    line-height:1.4;
 }
 
 .card-info{
@@ -142,7 +146,7 @@ header p{
 .more-card{
     background:#1e293b;
     border:2px dashed #475569;
-    border-radius:16px;
+    border-radius:14px;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -150,18 +154,52 @@ header p{
     cursor:pointer;
     transition:0.3s;
     min-height:180px;
-    width:100%;
-    max-width:120px;
-    justify-self:start;
+    color:#93c5fd;
     font-size:24px;
     font-weight:bold;
-    color:#93c5fd;
 }
 
 .more-card:hover{
-    background:#2563eb;
-    border-color:#2563eb;
+    background:#334155;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    overflow:auto;
+    background:rgba(0,0,0,0.8);
+}
+
+.modal-content{
+    background:#111827;
+    margin:40px auto;
+    width:92%;
+    max-width:1000px;
+    border-radius:16px;
+    padding:25px;
+}
+
+.close{
+    float:right;
+    font-size:30px;
+    cursor:pointer;
     color:white;
+}
+
+.list-item{
+    padding:15px;
+    border-bottom:1px solid #1e293b;
+}
+
+.list-item:hover{
+    background:#1e293b;
 }
 
 /* TABLE */
@@ -184,84 +222,29 @@ th{
     color:#93c5fd;
     padding:14px;
     text-align:left;
-    font-size:14px;
 }
 
 td{
     padding:14px;
     border-bottom:1px solid #1e293b;
-    color:#e2e8f0;
-    font-size:14px;
 }
 
-/* MORE LOG BUTTON */
+/* SHOW MORE LOGS */
 
-.more-log-btn{
+.show-more-btn{
     margin-top:15px;
+    background:#2563eb;
+    border:none;
+    color:white;
     padding:12px 20px;
-    background:#1e293b;
-    border:1px dashed #475569;
     border-radius:10px;
-    color:#93c5fd;
     cursor:pointer;
-    transition:0.3s;
+    font-size:15px;
     font-weight:bold;
 }
 
-.more-log-btn:hover{
-    background:#2563eb;
-    border-color:#2563eb;
-    color:white;
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.75);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-    padding:20px;
-    box-sizing:border-box;
-}
-
-.modal-content{
-    background:#0f172a;
-    width:100%;
-    max-width:1300px;
-    max-height:90vh;
-    overflow:auto;
-    border-radius:18px;
-    border:1px solid #1e293b;
-    padding:25px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.close-btn{
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:10px;
-    background:#ef4444;
-    color:white;
-    font-size:18px;
-    cursor:pointer;
-}
-
-.close-btn:hover{
-    background:#dc2626;
+.show-more-btn:hover{
+    background:#1d4ed8;
 }
 
 /* CLOCK */
@@ -276,21 +259,22 @@ td{
 
 footer{
     text-align:center;
-    padding:35px;
+    padding:30px;
     color:#94a3b8;
 }
 
-/* MOBILE */
-
 @media(max-width:900px){
 
-    .card-grid{
+    .card-grid,
+    .card-grid.one,
+    .card-grid.two,
+    .card-grid.three,
+    .card-grid.more{
         grid-template-columns:1fr;
     }
 
     .more-card{
-        max-width:100%;
-        width:100%;
+        min-height:120px;
     }
 
 }
@@ -310,49 +294,31 @@ footer{
     <!-- SEARCH -->
 
     <div class="search-box">
-        <input type="text"
-        id="searchBox"
+        <input type="text" id="searchBox"
         placeholder="Search by Title / Scholar / Reg ID...">
     </div>
 
     <!-- TODAY -->
 
     <div class="live-box">
-
         <h2>Today's Seminar</h2>
-
-        <div id="todaySeminar">
-            Loading...
-        </div>
-
-        <div class="countdown"
-        id="countdown"></div>
-
+        <div id="todaySeminar">Loading...</div>
+        <div class="countdown" id="countdown"></div>
     </div>
 
     <!-- UPCOMING -->
 
-    <h2 class="section-title">
-        Upcoming Seminars
-    </h2>
-
-    <div class="card-grid"
-    id="upcomingContainer"></div>
+    <h2 class="section-title">Upcoming Seminars</h2>
+    <div class="card-grid" id="upcomingContainer"></div>
 
     <!-- PREVIOUS -->
 
-    <h2 class="section-title">
-        Previous Seminars
-    </h2>
-
-    <div class="card-grid"
-    id="previousContainer"></div>
+    <h2 class="section-title">Previous Seminars</h2>
+    <div class="card-grid" id="previousContainer"></div>
 
     <!-- LOG -->
 
-    <h2 class="section-title">
-        Seminar Log
-    </h2>
+    <h2 class="section-title">Seminar Log</h2>
 
     <div class="table-container">
 
@@ -360,8 +326,8 @@ footer{
 
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th>Date of Seminar</th>
+                    <th>Time of Seminar</th>
                     <th>Reg. ID</th>
                     <th>Scholar Name</th>
                     <th>Supervisor Name</th>
@@ -375,108 +341,37 @@ footer{
 
     </div>
 
-    <div id="moreLogContainer"></div>
+    <button class="show-more-btn"
+    id="showMoreLogsBtn">
+    Show All Logs
+    </button>
 
     <!-- CLOCK -->
 
     <div class="clock">
-
         <div id="liveDate"></div>
         <div id="liveTime"></div>
-
     </div>
 
 </div>
 
 <footer>
-
 Seminar Management System<br>
 Department of Mechanical Engineering<br>
 VFSTR, Vadlamudi
-
 </footer>
 
-<!-- SEMINAR MODAL -->
+<!-- MODAL -->
 
-<div id="seminarModal" class="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-
-            <h2 id="modalTitle">
-                Seminar List
-            </h2>
-
-            <button class="close-btn"
-            onclick="closeSeminarModal()">
-            ✕
-            </button>
-
-        </div>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Scholar</th>
-                        <th>Seminar</th>
-                    </tr>
-                </thead>
-
-                <tbody id="modalTable"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- LOG MODAL -->
-
-<div id="logModal" class="modal">
+<div class="modal" id="seminarModal">
 
     <div class="modal-content">
 
-        <div class="modal-header">
+        <span class="close" id="closeModal">&times;</span>
 
-            <h2>
-                All Seminar Logs
-            </h2>
+        <h2 id="modalTitle"></h2>
 
-            <button class="close-btn"
-            onclick="closeLogModal()">
-            ✕
-            </button>
-
-        </div>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Reg. ID</th>
-                        <th>Scholar</th>
-                        <th>Supervisor</th>
-                        <th>Seminar</th>
-                    </tr>
-                </thead>
-
-                <tbody id="fullLogTable"></tbody>
-
-            </table>
-
-        </div>
+        <div id="modalList"></div>
 
     </div>
 
@@ -484,11 +379,9 @@ VFSTR, Vadlamudi
 
 <script>
 
-/* CONFIG */
+/* ================= CONFIG ================= */
 
-const sheetID =
-"1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
-
+const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 const gid = "1424736644";
 
 const sheetURL =
@@ -498,10 +391,12 @@ const MAX_VISIBLE_CARDS = 3;
 const MAX_VISIBLE_LOGS = 5;
 const SEMINAR_DURATION_MIN = 60;
 
+/* ================= STATE ================= */
+
 let seminars = [];
 let countdownInterval = null;
 
-/* DATE */
+/* ================= DATE ================= */
 
 function parseDate(dateStr,timeStr="00:00"){
 
@@ -511,21 +406,13 @@ function parseDate(dateStr,timeStr="00:00"){
     dateStr.split("/").map(Number);
 
     const [hh,mi] =
-    (timeStr || "00:00")
-    .split(":")
-    .map(Number);
+    (timeStr || "00:00").split(":").map(Number);
 
-    return new Date(
-        yyyy,
-        mm-1,
-        dd,
-        hh||0,
-        mi||0
-    );
+    return new Date(yyyy,mm-1,dd,hh||0,mi||0);
 
 }
 
-/* CSV */
+/* ================= CSV ================= */
 
 function parseRow(text){
 
@@ -558,7 +445,7 @@ function parseRow(text){
 
 }
 
-/* FETCH */
+/* ================= LOAD ================= */
 
 async function loadData(){
 
@@ -567,18 +454,15 @@ async function loadData(){
 
     const csv = await res.text();
 
-    const lines =
-    csv.split(/\r?\n/);
+    const lines = csv.split(/\r?\n/);
 
-    const headers =
-    parseRow(lines[0]);
+    const headers = parseRow(lines[0]);
 
     seminars = lines.slice(1)
     .filter(l=>l.trim())
     .map((l,i)=>{
 
-        const vals =
-        parseRow(l);
+        const vals = parseRow(l);
 
         let obj = {};
 
@@ -597,7 +481,7 @@ async function loadData(){
         obj._end =
         new Date(
             obj._date.getTime() +
-            SEMINAR_DURATION_MIN * 60000
+            SEMINAR_DURATION_MIN*60000
         );
 
         return obj;
@@ -608,23 +492,22 @@ async function loadData(){
 
 }
 
-/* UI */
+/* ================= UI ================= */
 
 function renderUI(){
 
     renderCards();
-    renderTable();
+    renderLogTable();
     setupToday();
 
 }
 
-/* SEARCH */
+/* ================= SEARCH ================= */
 
-document
-.getElementById("searchBox")
+document.getElementById("searchBox")
 .addEventListener("input",renderCards);
 
-/* CARDS */
+/* ================= CARDS ================= */
 
 function renderCards(){
 
@@ -639,8 +522,7 @@ function renderCards(){
 
     const search =
     document.getElementById("searchBox")
-    .value
-    .toLowerCase();
+    .value.toLowerCase();
 
     const now = new Date();
 
@@ -668,6 +550,7 @@ function renderCards(){
     });
 
     upcoming.sort((a,b)=>a._date-b._date);
+
     previous.sort((a,b)=>b._date-a._date);
 
     renderSection(
@@ -684,12 +567,30 @@ function renderCards(){
 
 }
 
-/* SECTION */
+/* ================= SECTION ================= */
 
 function renderSection(data,container,title){
 
+    container.innerHTML = "";
+
     const visible =
     data.slice(0,MAX_VISIBLE_CARDS);
+
+    if(data.length === 1){
+        container.className = "card-grid one";
+    }
+
+    else if(data.length === 2){
+        container.className = "card-grid two";
+    }
+
+    else if(data.length === 3){
+        container.className = "card-grid three";
+    }
+
+    else{
+        container.className = "card-grid more";
+    }
 
     visible.forEach(s=>{
 
@@ -735,6 +636,8 @@ function renderSection(data,container,title){
 
     });
 
+    /* MORE CARD */
+
     if(data.length > MAX_VISIBLE_CARDS){
 
         const remain =
@@ -749,7 +652,7 @@ function renderSection(data,container,title){
 
         more.onclick = ()=>{
 
-            openSeminarModal(title,data);
+            openModal(title,data);
 
         };
 
@@ -759,69 +662,93 @@ function renderSection(data,container,title){
 
 }
 
-/* MODAL */
+/* ================= MODAL ================= */
 
-function openSeminarModal(title,data){
+function openModal(title,data){
+
+    document.getElementById("seminarModal")
+    .style.display = "block";
 
     document.getElementById("modalTitle")
     .innerText = title;
 
-    const tbody =
-    document.getElementById("modalTable");
+    const list =
+    document.getElementById("modalList");
 
-    tbody.innerHTML = "";
+    list.innerHTML = "";
 
     data.forEach(s=>{
 
-        const row =
-        document.createElement("tr");
+        const item =
+        document.createElement("div");
 
-        row.innerHTML = `
-            <td>${s["Date of the Seminar"]}</td>
-            <td>${s["Time of the Seminar"]}</td>
-            <td>${s["Scholar Name"]}</td>
-            <td>${s["Title of the Seminar"]}</td>
+        item.className = "list-item";
+
+        item.innerHTML = `
+
+            <b>${s["Title of the Seminar"]}</b><br>
+
+            ${s["Scholar Name"]}<br>
+
+            ${s["Date of the Seminar"]}
+            |
+            ${s["Time of the Seminar"]}
+
         `;
 
-        tbody.appendChild(row);
+        item.onclick = ()=>{
+
+            window.location.href =
+            "seminar.html?id=" +
+            encodeURIComponent(s.id);
+
+        };
+
+        list.appendChild(item);
 
     });
 
-    document.getElementById("seminarModal")
-    .style.display = "flex";
-
 }
 
-function closeSeminarModal(){
+document.getElementById("closeModal")
+.onclick = ()=>{
 
     document.getElementById("seminarModal")
     .style.display = "none";
 
-}
+};
 
-/* TABLE */
+window.onclick = (e)=>{
 
-function renderTable(){
+    if(e.target ==
+    document.getElementById("seminarModal")){
+
+        document.getElementById("seminarModal")
+        .style.display = "none";
+
+    }
+
+};
+
+/* ================= LOG TABLE ================= */
+
+function renderLogTable(showAll=false){
 
     const tbody =
     document.getElementById("logTable");
 
-    const fullBody =
-    document.getElementById("fullLogTable");
-
-    const moreContainer =
-    document.getElementById("moreLogContainer");
-
     tbody.innerHTML = "";
-    fullBody.innerHTML = "";
-    moreContainer.innerHTML = "";
+
+    /* LATEST LOGS FIRST */
 
     const sorted =
     [...seminars]
-    .sort((a,b)=>a._date-b._date);
+    .sort((a,b)=>b._date - a._date);
 
     const visible =
-    sorted.slice(0,MAX_VISIBLE_LOGS);
+    showAll
+    ? sorted
+    : sorted.slice(0,MAX_VISIBLE_LOGS);
 
     visible.forEach(s=>{
 
@@ -829,71 +756,54 @@ function renderTable(){
         document.createElement("tr");
 
         row.innerHTML = `
-            <td>${s["Date of the Seminar"]}</td>
-            <td>${s["Time of the Seminar"]}</td>
-            <td>${s["Scholar Reg. ID"]}</td>
-            <td>${s["Scholar Name"]}</td>
-            <td>${s["Supervisor Name"]}</td>
-            <td>${s["Seminar Name"]}</td>
+
+            <td>${s["Date of the Seminar"] || "-"}</td>
+
+            <td>${s["Time of the Seminar"] || "-"}</td>
+
+            <td>${s["Scholar Reg. ID"] || "-"}</td>
+
+            <td>${s["Scholar Name"] || "-"}</td>
+
+            <td>${s["Supervisor Name"] || "-"}</td>
+
+            <td>${s["Seminar Name"] || "-"}</td>
+
         `;
 
         tbody.appendChild(row);
 
     });
 
-    sorted.forEach(s=>{
+}
 
-        const row =
-        document.createElement("tr");
+/* ================= SHOW ALL LOGS ================= */
 
-        row.innerHTML = `
-            <td>${s["Date of the Seminar"]}</td>
-            <td>${s["Time of the Seminar"]}</td>
-            <td>${s["Scholar Reg. ID"]}</td>
-            <td>${s["Scholar Name"]}</td>
-            <td>${s["Supervisor Name"]}</td>
-            <td>${s["Seminar Name"]}</td>
-        `;
+document.getElementById("showMoreLogsBtn")
+.addEventListener("click",()=>{
 
-        fullBody.appendChild(row);
+    const btn =
+    document.getElementById("showMoreLogsBtn");
 
-    });
+    if(btn.innerText === "Show All Logs"){
 
-    if(sorted.length > MAX_VISIBLE_LOGS){
+        renderLogTable(true);
 
-        const btn =
-        document.createElement("button");
-
-        btn.className = "more-log-btn";
-
-        btn.innerHTML =
-        `+ ${sorted.length - MAX_VISIBLE_LOGS} More Logs`;
-
-        btn.onclick = openLogModal;
-
-        moreContainer.appendChild(btn);
+        btn.innerText = "Show Less Logs";
 
     }
 
-}
+    else{
 
-/* LOG MODAL */
+        renderLogTable(false);
 
-function openLogModal(){
+        btn.innerText = "Show All Logs";
 
-    document.getElementById("logModal")
-    .style.display = "flex";
+    }
 
-}
+});
 
-function closeLogModal(){
-
-    document.getElementById("logModal")
-    .style.display = "none";
-
-}
-
-/* TODAY */
+/* ================= TODAY ================= */
 
 function setupToday(){
 
@@ -920,16 +830,14 @@ function setupToday(){
 
         clearInterval(countdownInterval);
 
-        countdownInterval =
-        setInterval(()=>{
+        countdownInterval = setInterval(()=>{
 
             const diff =
             active._end - new Date();
 
             if(diff <= 0){
 
-                cd.innerHTML =
-                "COMPLETED ✅";
+                cd.innerHTML = "COMPLETED ✅";
 
                 clearInterval(countdownInterval);
 
@@ -951,6 +859,8 @@ function setupToday(){
         return;
 
     }
+
+    /* NEXT SEMINAR */
 
     const upcoming =
     seminars
@@ -975,8 +885,7 @@ function setupToday(){
 
     clearInterval(countdownInterval);
 
-    countdownInterval =
-    setInterval(()=>{
+    countdownInterval = setInterval(()=>{
 
         const diff =
         upcoming._date - new Date();
@@ -1005,7 +914,7 @@ function setupToday(){
 
 }
 
-/* CLOCK */
+/* ================= CLOCK ================= */
 
 setInterval(()=>{
 
@@ -1021,31 +930,7 @@ setInterval(()=>{
 
 },1000);
 
-/* CLOSE MODAL */
-
-window.onclick = function(e){
-
-    const seminarModal =
-    document.getElementById("seminarModal");
-
-    const logModal =
-    document.getElementById("logModal");
-
-    if(e.target === seminarModal){
-
-        seminarModal.style.display = "none";
-
-    }
-
-    if(e.target === logModal){
-
-        logModal.style.display = "none";
-
-    }
-
-}
-
-/* INIT */
+/* ================= INIT ================= */
 
 loadData();
 
