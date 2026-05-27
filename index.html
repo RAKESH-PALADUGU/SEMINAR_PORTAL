@@ -8,6 +8,8 @@
 
 <style>
 
+/* ================= BODY ================= */
+
 body{
     margin:0;
     padding:0;
@@ -15,6 +17,8 @@ body{
     background:#0f172a;
     color:white;
 }
+
+/* ================= HEADER ================= */
 
 header{
     background:linear-gradient(135deg,#1e3a8a,#2563eb);
@@ -30,7 +34,10 @@ header h1{
 header p{
     margin-top:10px;
     color:#cbd5e1;
+    font-size:18px;
 }
+
+/* ================= CONTAINER ================= */
 
 .container{
     width:90%;
@@ -39,7 +46,7 @@ header p{
     padding:30px 0;
 }
 
-/* SEARCH */
+/* ================= SEARCH ================= */
 
 .search-box{
     margin-bottom:25px;
@@ -56,7 +63,7 @@ header p{
     outline:none;
 }
 
-/* TODAY BOX */
+/* ================= LIVE BOX ================= */
 
 .live-box{
     background:linear-gradient(135deg,#1e3a8a,#2563eb);
@@ -65,13 +72,17 @@ header p{
     margin-bottom:40px;
 }
 
+.live-box h2{
+    margin-top:0;
+}
+
 .countdown{
     color:#facc15;
     font-size:22px;
     margin-top:10px;
 }
 
-/* SECTION */
+/* ================= SECTION ================= */
 
 .section-title{
     font-size:28px;
@@ -80,13 +91,16 @@ header p{
     margin-bottom:20px;
 }
 
-/* CARDS */
+/* ================= CARD GRID ================= */
 
 .card-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
     gap:20px;
+    align-items:start;
 }
+
+/* ================= SEMINAR CARD ================= */
 
 .card{
     background:#111827;
@@ -122,49 +136,39 @@ header p{
     font-size:14px;
 }
 
-/* MORE CARD */
+/* ================= MORE CARD ================= */
 
 .more-card{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:#1e293b;
-    border:2px dashed #334155;
-    border-radius:14px;
-    min-height:180px;
-    color:#93c5fd;
-    font-size:22px;
-    font-weight:bold;
-}
-
-/* BUTTONS */
-
-.btn-group{
-    margin-top:15px;
-    display:flex;
-    gap:10px;
-}
-
-.btn{
-    flex:1;
     text-align:center;
-    padding:10px;
-    border-radius:8px;
-    text-decoration:none;
-    color:white;
-    font-size:13px;
+
+    background:#1e293b;
+
+    border:2px dashed #334155;
+
+    border-radius:14px;
+
+    min-height:120px;
+
+    max-width:180px;
+
+    color:#93c5fd;
+
     font-weight:bold;
+
+    padding:15px;
+
+    transition:0.3s;
 }
 
-.ppt{
-    background:#2563eb;
+.more-card:hover{
+    border-color:#2563eb;
+    transform:translateY(-4px);
 }
 
-.teams{
-    background:#16a34a;
-}
-
-/* TABLE */
+/* ================= TABLE ================= */
 
 .table-container{
     margin-top:25px;
@@ -189,9 +193,10 @@ th{
 td{
     padding:14px;
     border-bottom:1px solid #1e293b;
+    color:#e2e8f0;
 }
 
-/* CLOCK */
+/* ================= CLOCK ================= */
 
 .clock{
     margin-top:50px;
@@ -199,13 +204,15 @@ td{
     color:#cbd5e1;
 }
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 
 footer{
     text-align:center;
     padding:30px;
     color:#94a3b8;
 }
+
+/* ================= MOBILE ================= */
 
 @media(max-width:700px){
 
@@ -237,11 +244,10 @@ footer{
         <input
         type="text"
         id="searchBox"
-        placeholder="Search by Title / Scholar / Reg ID..."
-        >
+        placeholder="Search by Title / Scholar / Reg ID...">
     </div>
 
-    <!-- TODAY -->
+    <!-- LIVE -->
 
     <div class="live-box">
 
@@ -251,39 +257,63 @@ footer{
             Loading...
         </div>
 
-        <div class="countdown" id="countdown"></div>
+        <div
+        class="countdown"
+        id="countdown">
+        </div>
 
     </div>
 
     <!-- UPCOMING -->
 
-    <h2 class="section-title">Upcoming Seminars</h2>
+    <h2 class="section-title">
+        Upcoming Seminars
+    </h2>
 
-    <div class="card-grid" id="upcomingContainer"></div>
+    <div
+    class="card-grid"
+    id="upcomingContainer">
+    </div>
 
     <!-- PREVIOUS -->
 
-    <h2 class="section-title">Previous Seminars</h2>
+    <h2 class="section-title">
+        Previous Seminars
+    </h2>
 
-    <div class="card-grid" id="previousContainer"></div>
+    <div
+    class="card-grid"
+    id="previousContainer">
+    </div>
 
-    <!-- LOG -->
+    <!-- LOG TABLE -->
 
-    <h2 class="section-title">Seminar Log</h2>
+    <h2 class="section-title">
+        Seminar Log
+    </h2>
 
     <div class="table-container">
 
         <table>
 
             <thead>
+
                 <tr>
+
                     <th>Date of Seminar</th>
+
                     <th>Time of Seminar</th>
+
                     <th>Reg. ID</th>
+
                     <th>Scholar Name</th>
+
                     <th>Supervisor Name</th>
+
                     <th>Seminar Name</th>
+
                 </tr>
+
             </thead>
 
             <tbody id="logTable"></tbody>
@@ -295,25 +325,34 @@ footer{
     <!-- CLOCK -->
 
     <div class="clock">
+
         <div id="liveDate"></div>
+
         <div id="liveTime"></div>
+
     </div>
 
 </div>
 
 <footer>
+
 Seminar Management System<br>
+
 Department of Mechanical Engineering<br>
+
 VFSTR, Vadlamudi
+
 </footer>
 
 <script>
 
 /* ================= CONFIG ================= */
 
-const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
+const sheetID =
+"1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
 
-const gid = "1424736644";
+const gid =
+"1424736644";
 
 const sheetURL =
 `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
@@ -338,13 +377,21 @@ function parseDate(dateStr,timeStr="00:00"){
     dateStr.split("/").map(Number);
 
     const [hh,mi] =
-    (timeStr || "00:00").split(":").map(Number);
+    (timeStr || "00:00")
+    .split(":")
+    .map(Number);
 
-    return new Date(yyyy,mm-1,dd,hh||0,mi||0);
+    return new Date(
+        yyyy,
+        mm-1,
+        dd,
+        hh || 0,
+        mi || 0
+    );
 
 }
 
-/* ================= CSV ================= */
+/* ================= CSV PARSER ================= */
 
 function parseRow(text){
 
@@ -354,17 +401,22 @@ function parseRow(text){
 
     for(let c of text){
 
-        if(c=='"'){
-            q=!q;
+        if(c == '"'){
+            q = !q;
         }
 
-        else if(c==',' && !q){
+        else if(c == ',' && !q){
+
             out.push(cur);
-            cur="";
+
+            cur = "";
+
         }
 
         else{
-            cur+=c;
+
+            cur += c;
+
         }
 
     }
@@ -384,22 +436,31 @@ async function loadData(){
     const res =
     await fetch(sheetURL + "&t=" + Date.now());
 
-    const csv = await res.text();
+    const csv =
+    await res.text();
 
-    const lines = csv.split(/\r?\n/);
+    const lines =
+    csv.split(/\r?\n/);
 
-    const headers = parseRow(lines[0]);
+    const headers =
+    parseRow(lines[0]);
 
-    seminars = lines.slice(1)
+    seminars =
+    lines.slice(1)
+
     .filter(l => l.trim())
+
     .map((l,i)=>{
 
-        const vals = parseRow(l);
+        const vals =
+        parseRow(l);
 
         let obj = {};
 
         headers.forEach((h,j)=>{
+
             obj[h] = vals[j] || "";
+
         });
 
         obj.id = i;
@@ -467,31 +528,49 @@ function renderCards(){
 
     seminars.forEach(s=>{
 
-        const text =
-        (
+        const text = (
+
             s["Title of the Seminar"] + " " +
+
             s["Scholar Name"] + " " +
+
             s["Scholar Reg. ID"]
+
         ).toLowerCase();
 
         if(!text.includes(search)) return;
 
         if(s._date >= now){
+
             upcoming.push(s);
+
         }
+
         else{
+
             previous.push(s);
+
         }
 
     });
 
-    upcoming.sort((a,b)=>a._date-b._date);
+    upcoming.sort((a,b)=>
+        a._date - b._date
+    );
 
-    previous.sort((a,b)=>b._date-a._date);
+    previous.sort((a,b)=>
+        b._date - a._date
+    );
 
-    renderSection(upcoming,upcomingContainer);
+    renderSection(
+        upcoming,
+        upcomingContainer
+    );
 
-    renderSection(previous,previousContainer);
+    renderSection(
+        previous,
+        previousContainer
+    );
 
 }
 
@@ -503,12 +582,6 @@ function renderSection(data,container){
     data.slice(0,MAX_VISIBLE_CARDS);
 
     visible.forEach(s=>{
-
-        const ppt =
-        s["PPT Shareable Link"]?.trim();
-
-        const teams =
-        s["Microsoft Teams Link"]?.trim();
 
         const card =
         document.createElement("div");
@@ -546,36 +619,8 @@ function renderSection(data,container){
                 ${s["Date of the Seminar"]}
             </div>
 
-            <div class="btn-group">
-
-                ${
-                    ppt ?
-                    `
-                    <a class="btn ppt"
-                    href="${ppt}"
-                    target="_blank"
-                    onclick="event.stopPropagation()">
-                    PPT
-                    </a>
-                    `
-                    :
-                    ""
-                }
-
-                ${
-                    teams ?
-                    `
-                    <a class="btn teams"
-                    href="${teams}"
-                    target="_blank"
-                    onclick="event.stopPropagation()">
-                    Teams
-                    </a>
-                    `
-                    :
-                    ""
-                }
-
+            <div class="card-info">
+                ${s["Time of the Seminar"]}
             </div>
 
         `;
@@ -583,6 +628,8 @@ function renderSection(data,container){
         container.appendChild(card);
 
     });
+
+    /* MORE CARD */
 
     if(data.length > MAX_VISIBLE_CARDS){
 
@@ -594,8 +641,24 @@ function renderSection(data,container){
 
         more.className = "more-card";
 
-        more.innerHTML =
-        `+ ${remain} More Seminars`;
+        more.innerHTML = `
+
+            <div>
+
+                <div style="font-size:28px;">
+                    +${remain}
+                </div>
+
+                <div
+                style="
+                font-size:14px;
+                margin-top:8px;">
+                    More Seminars
+                </div>
+
+            </div>
+
+        `;
 
         container.appendChild(more);
 
@@ -614,7 +677,9 @@ function renderLogTable(){
 
     const sorted =
     [...seminars]
-    .sort((a,b)=>a._date-b._date);
+    .sort((a,b)=>
+        a._date - b._date
+    );
 
     sorted.forEach(s=>{
 
@@ -623,17 +688,29 @@ function renderLogTable(){
 
         row.innerHTML = `
 
-            <td>${s["Date of the Seminar"] || "-"}</td>
+            <td>
+                ${s["Date of the Seminar"] || "-"}
+            </td>
 
-            <td>${s["Time of the Seminar"] || "-"}</td>
+            <td>
+                ${s["Time of the Seminar"] || "-"}
+            </td>
 
-            <td>${s["Scholar Reg. ID"] || "-"}</td>
+            <td>
+                ${s["Scholar Reg. ID"] || "-"}
+            </td>
 
-            <td>${s["Scholar Name"] || "-"}</td>
+            <td>
+                ${s["Scholar Name"] || "-"}
+            </td>
 
-            <td>${s["Supervisor Name"] || "-"}</td>
+            <td>
+                ${s["Supervisor Name"] || "-"}
+            </td>
 
-            <td>${s["Seminar Name"] || "-"}</td>
+            <td>
+                ${s["Seminar Name"] || "-"}
+            </td>
 
         `;
 
@@ -653,24 +730,37 @@ function setupToday(){
     const cd =
     document.getElementById("countdown");
 
-    const now = new Date();
+    const now =
+    new Date();
+
+    /* ACTIVE */
 
     const active =
     seminars.find(s =>
+
         now >= s._date &&
         now <= s._end
+
     );
 
     if(active){
 
         box.innerHTML = `
-            <h2>${active["Title of the Seminar"]}</h2>
-            <p>${active["Scholar Name"]}</p>
+
+            <h2>
+                ${active["Title of the Seminar"]}
+            </h2>
+
+            <p>
+                ${active["Scholar Name"]}
+            </p>
+
         `;
 
         clearInterval(countdownInterval);
 
-        countdownInterval = setInterval(()=>{
+        countdownInterval =
+        setInterval(()=>{
 
             const diff =
             active._end - new Date();
@@ -680,17 +770,19 @@ function setupToday(){
                 cd.innerHTML =
                 "COMPLETED ✅";
 
-                clearInterval(countdownInterval);
+                clearInterval(
+                    countdownInterval
+                );
 
                 return;
 
             }
 
             const mins =
-            Math.floor(diff/60000);
+            Math.floor(diff / 60000);
 
             const secs =
-            Math.floor(diff/1000)%60;
+            Math.floor(diff / 1000) % 60;
 
             cd.innerHTML =
             `LIVE 🔴 Ends in ${mins}m ${secs}s`;
@@ -701,10 +793,16 @@ function setupToday(){
 
     }
 
+    /* NEXT */
+
     const upcoming =
     seminars
+
     .filter(s => s._date > now)
-    .sort((a,b)=>a._date-b._date)[0];
+
+    .sort((a,b)=>
+        a._date - b._date
+    )[0];
 
     if(!upcoming){
 
@@ -718,13 +816,21 @@ function setupToday(){
     }
 
     box.innerHTML = `
-        <h2>${upcoming["Title of the Seminar"]}</h2>
-        <p>${upcoming["Scholar Name"]}</p>
+
+        <h2>
+            ${upcoming["Title of the Seminar"]}
+        </h2>
+
+        <p>
+            ${upcoming["Scholar Name"]}
+        </p>
+
     `;
 
     clearInterval(countdownInterval);
 
-    countdownInterval = setInterval(()=>{
+    countdownInterval =
+    setInterval(()=>{
 
         const diff =
         upcoming._date - new Date();
@@ -738,13 +844,13 @@ function setupToday(){
         }
 
         const hrs =
-        Math.floor(diff/3600000);
+        Math.floor(diff / 3600000);
 
         const mins =
-        Math.floor(diff/60000)%60;
+        Math.floor(diff / 60000) % 60;
 
         const secs =
-        Math.floor(diff/1000)%60;
+        Math.floor(diff / 1000) % 60;
 
         cd.innerHTML =
         `Starts in ${hrs}h ${mins}m ${secs}s`;
@@ -757,13 +863,18 @@ function setupToday(){
 
 setInterval(()=>{
 
-    const n = new Date();
+    const n =
+    new Date();
 
-    document.getElementById("liveDate")
-    .innerText = n.toLocaleDateString();
+    document
+    .getElementById("liveDate")
+    .innerText =
+    n.toLocaleDateString();
 
-    document.getElementById("liveTime")
-    .innerText = n.toLocaleTimeString();
+    document
+    .getElementById("liveTime")
+    .innerText =
+    n.toLocaleTimeString();
 
 },1000);
 
