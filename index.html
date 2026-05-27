@@ -7,61 +7,66 @@
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
     padding:0;
     font-family:Arial,sans-serif;
-    background:#0f172a;
+    background:#081226;
     color:white;
 }
 
+/* ================= HEADER ================= */
+
 header{
-    background:linear-gradient(135deg,#1e3a8a,#2563eb);
-    padding:35px 20px;
+    background:linear-gradient(135deg,#2347b8,#2f67ff);
+    padding:22px 15px;
     text-align:center;
 }
 
 header h1{
     margin:0;
-    font-size:38px;
+    font-size:42px;
 }
 
 header p{
-    margin-top:10px;
-    color:#cbd5e1;
-    font-size:18px;
+    margin-top:8px;
+    color:#dbeafe;
 }
 
 .container{
-    width:90%;
-    max-width:1300px;
+    width:95%;
+    max-width:1400px;
     margin:auto;
-    padding:30px 0;
+    padding:25px 0 40px;
 }
 
-/* SEARCH */
+/* ================= SEARCH ================= */
 
 .search-box{
-    margin-bottom:25px;
+    margin-bottom:22px;
 }
 
 .search-box input{
     width:100%;
     padding:14px;
     border:none;
-    border-radius:10px;
-    background:#1e293b;
-    color:white;
-    font-size:16px;
     outline:none;
+    border-radius:10px;
+    background:#1b2940;
+    color:white;
+    font-size:15px;
 }
 
-/* LIVE BOX */
+/* ================= TODAY ================= */
 
 .live-box{
-    background:linear-gradient(135deg,#1e3a8a,#2563eb);
-    padding:25px;
+    background:linear-gradient(135deg,#2347b8,#2f67ff);
     border-radius:16px;
+    padding:25px;
     margin-bottom:40px;
 }
 
@@ -70,94 +75,114 @@ header p{
 }
 
 .countdown{
-    color:#facc15;
-    font-size:22px;
     margin-top:10px;
+    color:#fde047;
+    font-size:22px;
+    font-weight:bold;
 }
 
-/* SECTION */
+/* ================= SECTION TITLE ================= */
 
 .section-title{
-    font-size:28px;
     color:#60a5fa;
-    margin-top:40px;
+    margin-top:45px;
     margin-bottom:20px;
+    font-size:34px;
 }
 
-/* CARDS GRID */
+/* ================= CARD GRID ================= */
 
 .card-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
     gap:20px;
     align-items:stretch;
 }
 
-/* CARD */
+.card-grid.one{
+    grid-template-columns:1fr;
+}
+
+.card-grid.two{
+    grid-template-columns:1fr 1fr;
+}
+
+.card-grid.three{
+    grid-template-columns:1fr 1fr 1fr auto;
+}
+
+/* ================= CARD ================= */
 
 .card{
-    background:#111827;
-    border:1px solid #1e293b;
-    border-radius:14px;
+    background:#0f1a2f;
+    border:1px solid #1f3252;
+    border-radius:16px;
     padding:20px;
-    transition:0.3s;
     cursor:pointer;
-    min-height:180px;
+    transition:0.3s;
+    min-height:190px;
 }
 
 .card:hover{
-    transform:translateY(-5px);
-    border-color:#2563eb;
+    transform:translateY(-4px);
+    border-color:#3b82f6;
 }
 
 .card-type{
     display:inline-block;
     background:#2563eb;
-    padding:5px 12px;
+    padding:6px 12px;
     border-radius:20px;
     font-size:12px;
-    margin-bottom:15px;
+    margin-bottom:16px;
 }
 
 .card-title{
-    font-size:20px;
-    margin-bottom:10px;
+    font-size:24px;
+    margin-bottom:12px;
+    line-height:1.4;
 }
 
 .card-info{
-    color:#cbd5e1;
-    margin:5px 0;
-    font-size:14px;
+    color:#dbeafe;
+    margin:6px 0;
+    font-size:15px;
 }
 
-/* MORE CARD */
+/* ================= MORE CARD ================= */
 
 .more-card{
-    background:#1e293b;
-    border:2px dashed #334155;
-    border-radius:14px;
+    width:90px;
+    min-width:90px;
+    max-width:90px;
+    min-height:190px;
+
+    background:#24334d;
+    border:2px dashed #4b5f80;
+    border-radius:16px;
+
     display:flex;
     justify-content:center;
     align-items:center;
     text-align:center;
+
     color:#93c5fd;
-    font-size:18px;
+    font-size:28px;
     font-weight:bold;
+
     cursor:pointer;
     transition:0.3s;
-    min-height:180px;
 }
 
 .more-card:hover{
-    background:#334155;
+    background:#30415f;
 }
 
-/* MODAL */
+/* ================= MODAL ================= */
 
 .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.7);
+    background:rgba(0,0,0,0.8);
     display:none;
     justify-content:center;
     align-items:center;
@@ -165,12 +190,13 @@ header p{
 }
 
 .modal-content{
-    width:90%;
-    max-width:900px;
+    width:92%;
+    max-width:1000px;
     max-height:85vh;
     overflow-y:auto;
-    background:#111827;
-    border-radius:16px;
+
+    background:#0f172a;
+    border-radius:18px;
     padding:25px;
 }
 
@@ -182,41 +208,35 @@ header p{
 }
 
 .close-btn{
-    background:#dc2626;
-    color:white;
+    background:#ef4444;
     border:none;
-    padding:8px 12px;
+    color:white;
+    padding:10px 14px;
     border-radius:8px;
     cursor:pointer;
+    font-weight:bold;
 }
 
-/* LIST ITEMS */
-
 .list-item{
-    background:#1e293b;
+    background:#111f38;
+    border:1px solid #223555;
+    border-radius:14px;
     padding:18px;
-    border-radius:12px;
     margin-bottom:15px;
     cursor:pointer;
     transition:0.3s;
 }
 
 .list-item:hover{
-    background:#334155;
+    border-color:#3b82f6;
 }
 
 .list-title{
-    font-size:18px;
+    font-size:20px;
     margin-bottom:8px;
-    color:#60a5fa;
 }
 
-.list-info{
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-/* TABLE */
+/* ================= TABLE ================= */
 
 .table-container{
     margin-top:25px;
@@ -226,50 +246,70 @@ header p{
 table{
     width:100%;
     border-collapse:collapse;
-    background:#111827;
-    border-radius:14px;
+    background:#0f1a2f;
+    border-radius:16px;
     overflow:hidden;
 }
 
 th{
-    background:#1e293b;
+    background:#1d2d49;
     color:#93c5fd;
     padding:14px;
     text-align:left;
+    font-size:14px;
 }
 
 td{
     padding:14px;
-    border-bottom:1px solid #1e293b;
+    border-bottom:1px solid #223555;
     color:#e2e8f0;
+    font-size:14px;
 }
 
-/* CLOCK */
+/* ================= CLOCK ================= */
 
 .clock{
-    margin-top:50px;
     text-align:center;
+    margin-top:50px;
     color:#cbd5e1;
 }
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 
 footer{
     text-align:center;
-    padding:30px;
+    padding:25px;
     color:#94a3b8;
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 
-@media(max-width:700px){
+@media(max-width:900px){
+
+    .card-grid,
+    .card-grid.one,
+    .card-grid.two,
+    .card-grid.three{
+        grid-template-columns:1fr;
+    }
+
+    .more-card{
+        width:100%;
+        max-width:none;
+        min-width:auto;
+        min-height:120px;
+    }
 
     header h1{
+        font-size:30px;
+    }
+
+    .section-title{
         font-size:28px;
     }
 
-    .card-grid{
-        grid-template-columns:1fr;
+    .card-title{
+        font-size:22px;
     }
 
 }
@@ -287,15 +327,14 @@ footer{
 <div class="container">
 
     <!-- SEARCH -->
-
     <div class="search-box">
-        <input type="text"
+        <input
+        type="text"
         id="searchBox"
         placeholder="Search by Title / Scholar / Reg ID...">
     </div>
 
     <!-- TODAY -->
-
     <div class="live-box">
         <h2>Today's Seminar</h2>
         <div id="todaySeminar">Loading...</div>
@@ -303,17 +342,14 @@ footer{
     </div>
 
     <!-- UPCOMING -->
-
     <h2 class="section-title">Upcoming Seminars</h2>
     <div class="card-grid" id="upcomingContainer"></div>
 
     <!-- PREVIOUS -->
-
     <h2 class="section-title">Previous Seminars</h2>
     <div class="card-grid" id="previousContainer"></div>
 
     <!-- LOG -->
-
     <h2 class="section-title">Seminar Log</h2>
 
     <div class="table-container">
@@ -338,33 +374,9 @@ footer{
     </div>
 
     <!-- CLOCK -->
-
     <div class="clock">
         <div id="liveDate"></div>
         <div id="liveTime"></div>
-    </div>
-
-</div>
-
-<!-- MODAL -->
-
-<div class="modal" id="seminarModal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-
-            <h2 id="modalTitle">Seminars</h2>
-
-            <button class="close-btn"
-            onclick="closeModal()">
-            Close
-            </button>
-
-        </div>
-
-        <div id="modalList"></div>
-
     </div>
 
 </div>
@@ -375,22 +387,48 @@ Department of Mechanical Engineering<br>
 VFSTR, Vadlamudi
 </footer>
 
+<!-- ================= MODAL ================= -->
+
+<div class="modal" id="seminarModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">Seminar List</h2>
+
+            <button class="close-btn"
+            onclick="closeModal()">
+            Close
+            </button>
+
+        </div>
+
+        <div id="modalBody"></div>
+
+    </div>
+
+</div>
+
 <script>
 
 /* ================= CONFIG ================= */
 
 const sheetID = "1SMkzv_zjjoPNvbkIxz5TGqquVnp4ecmnxClrXoaZraU";
+
 const gid = "1424736644";
 
 const sheetURL =
 `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=${gid}`;
 
-const MAX_VISIBLE_CARDS = 2;
+const MAX_VISIBLE = 3;
+
 const SEMINAR_DURATION_MIN = 60;
 
 /* ================= STATE ================= */
 
 let seminars = [];
+
 let countdownInterval = null;
 
 /* ================= DATE ================= */
@@ -405,16 +443,11 @@ function parseDate(dateStr,timeStr="00:00"){
     const [hh,mi] =
     (timeStr || "00:00").split(":").map(Number);
 
-    return new Date(
-        yyyy,
-        mm-1,
-        dd,
-        hh||0,
-        mi||0
-    );
+    return new Date(yyyy,mm-1,dd,hh||0,mi||0);
+
 }
 
-/* ================= CSV ================= */
+/* ================= CSV PARSER ================= */
 
 function parseRow(text){
 
@@ -424,25 +457,27 @@ function parseRow(text){
 
     for(let c of text){
 
-        if(c=='"'){
-            q=!q;
+        if(c == '"'){
+            q = !q;
         }
 
-        else if(c==',' && !q){
+        else if(c == ',' && !q){
             out.push(cur);
-            cur="";
+            cur = "";
         }
 
         else{
-            cur+=c;
+            cur += c;
         }
+
     }
 
     out.push(cur);
 
-    return out.map(v=>
+    return out.map(v =>
         v.replace(/^"|"$/g,'').trim()
     );
+
 }
 
 /* ================= FETCH ================= */
@@ -454,12 +489,14 @@ async function loadData(){
 
     const csv = await res.text();
 
-    const lines = csv.split(/\r?\n/);
+    const lines =
+    csv.split(/\r?\n/);
 
-    const headers = parseRow(lines[0]);
+    const headers =
+    parseRow(lines[0]);
 
     seminars = lines.slice(1)
-    .filter(l=>l.trim())
+    .filter(l => l.trim())
     .map((l,i)=>{
 
         const vals = parseRow(l);
@@ -485,9 +522,11 @@ async function loadData(){
         );
 
         return obj;
+
     });
 
     renderUI();
+
 }
 
 /* ================= UI ================= */
@@ -495,7 +534,9 @@ async function loadData(){
 function renderUI(){
 
     renderCards();
+
     renderLogTable();
+
     setupToday();
 
 }
@@ -545,9 +586,11 @@ function renderCards(){
         else{
             previous.push(s);
         }
+
     });
 
     upcoming.sort((a,b)=>a._date-b._date);
+
     previous.sort((a,b)=>b._date-a._date);
 
     renderSection(
@@ -561,14 +604,39 @@ function renderCards(){
         previousContainer,
         "Previous Seminars"
     );
+
 }
 
 /* ================= SECTION ================= */
 
 function renderSection(data,container,title){
 
-    const visible =
-    data.slice(0,MAX_VISIBLE_CARDS);
+    container.innerHTML = "";
+
+    let visible = data;
+    let extra = 0;
+
+    if(data.length > MAX_VISIBLE){
+
+        visible = data.slice(0,MAX_VISIBLE);
+
+        extra = data.length - MAX_VISIBLE;
+
+    }
+
+    if(visible.length === 1){
+        container.className = "card-grid one";
+    }
+
+    else if(visible.length === 2){
+        container.className = "card-grid two";
+    }
+
+    else{
+        container.className = "card-grid three";
+    }
+
+    /* SEMINAR CARDS */
 
     visible.forEach(s=>{
 
@@ -616,25 +684,25 @@ function renderSection(data,container,title){
 
     /* MORE CARD */
 
-    if(data.length > MAX_VISIBLE_CARDS){
-
-        const remain =
-        data.length - MAX_VISIBLE_CARDS;
+    if(extra > 0){
 
         const more =
         document.createElement("div");
 
         more.className = "more-card";
 
-        more.innerHTML =
-        `+${remain}`;
+        more.innerHTML = `+${extra}`;
 
         more.onclick = ()=>{
+
             openModal(title,data);
+
         };
 
         container.appendChild(more);
+
     }
+
 }
 
 /* ================= MODAL ================= */
@@ -647,10 +715,10 @@ function openModal(title,data){
     document.getElementById("modalTitle")
     .innerText = title;
 
-    const list =
-    document.getElementById("modalList");
+    const body =
+    document.getElementById("modalBody");
 
-    list.innerHTML = "";
+    body.innerHTML = "";
 
     data.forEach(s=>{
 
@@ -673,11 +741,11 @@ function openModal(title,data){
                 ${s["Title of the Seminar"]}
             </div>
 
-            <div class="list-info">
+            <div>
                 ${s["Scholar Name"]}
             </div>
 
-            <div class="list-info">
+            <div>
                 ${s["Date of the Seminar"]}
                 |
                 ${s["Time of the Seminar"]}
@@ -685,14 +753,17 @@ function openModal(title,data){
 
         `;
 
-        list.appendChild(item);
+        body.appendChild(item);
+
     });
+
 }
 
 function closeModal(){
 
     document.getElementById("seminarModal")
     .style.display = "none";
+
 }
 
 /* ================= LOG TABLE ================= */
@@ -706,7 +777,7 @@ function renderLogTable(){
 
     const sorted =
     [...seminars]
-    .sort((a,b)=>a._date - b._date);
+    .sort((a,b)=>a._date-b._date);
 
     sorted.forEach(s=>{
 
@@ -715,22 +786,36 @@ function renderLogTable(){
 
         row.innerHTML = `
 
-            <td>${s["Date of the Seminar"] || "-"}</td>
+            <td>
+                ${s["Date of the Seminar"] || "-"}
+            </td>
 
-            <td>${s["Time of the Seminar"] || "-"}</td>
+            <td>
+                ${s["Time of the Seminar"] || "-"}
+            </td>
 
-            <td>${s["Scholar Reg. ID"] || "-"}</td>
+            <td>
+                ${s["Scholar Reg. ID"] || "-"}
+            </td>
 
-            <td>${s["Scholar Name"] || "-"}</td>
+            <td>
+                ${s["Scholar Name"] || "-"}
+            </td>
 
-            <td>${s["Supervisor Name"] || "-"}</td>
+            <td>
+                ${s["Supervisor Name"] || "-"}
+            </td>
 
-            <td>${s["Seminar Name"] || "-"}</td>
+            <td>
+                ${s["Seminar Name"] || "-"}
+            </td>
 
         `;
 
         tbody.appendChild(row);
+
     });
+
 }
 
 /* ================= TODAY ================= */
@@ -743,9 +828,13 @@ function setupToday(){
     const cd =
     document.getElementById("countdown");
 
-    const now = new Date();
+    const now =
+    new Date();
 
-    const active = seminars.find(s =>
+    /* ACTIVE SEMINAR */
+
+    const active =
+    seminars.find(s =>
         now >= s._date &&
         now <= s._end
     );
@@ -753,6 +842,7 @@ function setupToday(){
     if(active){
 
         box.innerHTML = `
+
             <h2>
                 ${active["Title of the Seminar"]}
             </h2>
@@ -760,6 +850,7 @@ function setupToday(){
             <p>
                 ${active["Scholar Name"]}
             </p>
+
         `;
 
         clearInterval(countdownInterval);
@@ -775,18 +866,17 @@ function setupToday(){
                 cd.innerHTML =
                 "COMPLETED ✅";
 
-                clearInterval(
-                    countdownInterval
-                );
+                clearInterval(countdownInterval);
 
                 return;
+
             }
 
             const mins =
-            Math.floor(diff / 60000);
+            Math.floor(diff/60000);
 
             const secs =
-            Math.floor(diff / 1000) % 60;
+            Math.floor(diff/1000)%60;
 
             cd.innerHTML =
             `LIVE 🔴 Ends in ${mins}m ${secs}s`;
@@ -794,9 +884,10 @@ function setupToday(){
         },1000);
 
         return;
+
     }
 
-    /* NEXT */
+    /* UPCOMING SEMINAR */
 
     const upcoming =
     seminars
@@ -811,6 +902,7 @@ function setupToday(){
         cd.innerHTML = "";
 
         return;
+
     }
 
     box.innerHTML = `
@@ -836,22 +928,25 @@ function setupToday(){
         if(diff <= 0){
 
             loadData();
+
             return;
+
         }
 
         const hrs =
-        Math.floor(diff / 3600000);
+        Math.floor(diff/3600000);
 
         const mins =
-        Math.floor(diff / 60000) % 60;
+        Math.floor(diff/60000)%60;
 
         const secs =
-        Math.floor(diff / 1000) % 60;
+        Math.floor(diff/1000)%60;
 
         cd.innerHTML =
         `Starts in ${hrs}h ${mins}m ${secs}s`;
 
     },1000);
+
 }
 
 /* ================= CLOCK ================= */
