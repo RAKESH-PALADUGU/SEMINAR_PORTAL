@@ -84,33 +84,25 @@ header p{
     margin-bottom:20px;
 }
 
-/* CARDS */
+/* CARDS GRID */
 
 .card-grid{
-    display:flex;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
     gap:20px;
-    overflow-x:auto;
-    padding-bottom:10px;
+    align-items:stretch;
 }
 
-.card-grid::-webkit-scrollbar{
-    height:8px;
-}
-
-.card-grid::-webkit-scrollbar-thumb{
-    background:#334155;
-    border-radius:10px;
-}
+/* CARD */
 
 .card{
-    min-width:320px;
     background:#111827;
     border:1px solid #1e293b;
     border-radius:14px;
     padding:20px;
     transition:0.3s;
     cursor:pointer;
-    flex-shrink:0;
+    min-height:180px;
 }
 
 .card:hover{
@@ -138,12 +130,9 @@ header p{
     font-size:14px;
 }
 
-/* SMALL MORE CARD */
+/* MORE CARD */
 
 .more-card{
-    width:80px;
-    min-width:80px;
-    height:auto;
     background:#1e293b;
     border:2px dashed #334155;
     border-radius:14px;
@@ -152,11 +141,11 @@ header p{
     align-items:center;
     text-align:center;
     color:#93c5fd;
-    font-size:15px;
+    font-size:18px;
     font-weight:bold;
     cursor:pointer;
-    padding:10px;
     transition:0.3s;
+    min-height:180px;
 }
 
 .more-card:hover{
@@ -201,7 +190,7 @@ header p{
     cursor:pointer;
 }
 
-/* LIST INSIDE MODAL */
+/* LIST ITEMS */
 
 .list-item{
     background:#1e293b;
@@ -271,19 +260,16 @@ footer{
     color:#94a3b8;
 }
 
+/* MOBILE */
+
 @media(max-width:700px){
 
     header h1{
         font-size:28px;
     }
 
-    .card{
-        min-width:260px;
-    }
-
-    .more-card{
-        min-width:70px;
-        width:70px;
+    .card-grid{
+        grid-template-columns:1fr;
     }
 
 }
@@ -308,7 +294,7 @@ footer{
         placeholder="Search by Title / Scholar / Reg ID...">
     </div>
 
-    <!-- LIVE -->
+    <!-- TODAY -->
 
     <div class="live-box">
         <h2>Today's Seminar</h2>
@@ -729,29 +715,17 @@ function renderLogTable(){
 
         row.innerHTML = `
 
-            <td>
-                ${s["Date of the Seminar"] || "-"}
-            </td>
+            <td>${s["Date of the Seminar"] || "-"}</td>
 
-            <td>
-                ${s["Time of the Seminar"] || "-"}
-            </td>
+            <td>${s["Time of the Seminar"] || "-"}</td>
 
-            <td>
-                ${s["Scholar Reg. ID"] || "-"}
-            </td>
+            <td>${s["Scholar Reg. ID"] || "-"}</td>
 
-            <td>
-                ${s["Scholar Name"] || "-"}
-            </td>
+            <td>${s["Scholar Name"] || "-"}</td>
 
-            <td>
-                ${s["Supervisor Name"] || "-"}
-            </td>
+            <td>${s["Supervisor Name"] || "-"}</td>
 
-            <td>
-                ${s["Seminar Name"] || "-"}
-            </td>
+            <td>${s["Seminar Name"] || "-"}</td>
 
         `;
 
